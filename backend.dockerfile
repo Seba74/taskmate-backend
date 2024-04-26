@@ -14,7 +14,7 @@ RUN npm install
 RUN npm install -g typescript
 
 # Install Prisma as a development dependency
-COPY /src/prisma ./prisma
+COPY src/prisma/schema.prisma ./src/prisma/schema.prisma
 
 # Generate the Prisma client
 RUN npx prisma generate
