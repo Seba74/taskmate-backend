@@ -10,10 +10,15 @@
     "dev": "npm-run-all --parallel watch:ts watch:server",
     "build": "tsc"
   },
+  "prisma": {
+    "schema": "src/prisma/schema.prisma"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "^5.13.0",
+    "@prisma/studio": "^0.500.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "class-validator": "^0.14.1",
@@ -22,6 +27,7 @@
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "pg": "^8.11.5",
+    "prisma": "^5.13.0",
     "secure-compare": "^3.0.1"
   },
   "devDependencies": {
@@ -30,6 +36,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/body-parser": "^1.19.5",
     "@types/cors": "^2.8.17",
+    "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
     "@types/express-serve-static-core": "^4.19.0",
     "@types/jsonwebtoken": "^9.0.6",

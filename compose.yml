@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  backend:
+      container_name: taskmate_backend
+      build: 
+        context: .
+        dockerfile: backend.dockerfile
+      restart: always
+      ports:
+        - "4000:4000"
+      environment:
+        - DATABASE_URL=postgresql://postgres:root@taskmate_db:5432/taskmate?schema=public
+
+  db: 
+    container_name: taskmate_db
+    image: postgres:13
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: taskmate
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+  
+volumes:
+  postgres_data: {}

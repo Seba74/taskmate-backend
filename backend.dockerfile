@@ -1,5 +1,5 @@
 # Base image
-FROM node:latest
+FROM node:21
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -13,6 +13,12 @@ RUN npm install
 # Install TypeScript as a development dependency
 RUN npm install -g typescript
 
+# Install Prisma as a development dependency
+COPY /src/prisma ./prisma
+
+# Generate the Prisma client
+RUN npx prisma generate
+
 # Bundle app source
 COPY . .
 
@@ -20,7 +26,7 @@ COPY . .
 RUN npm run build
 
 # Expose the port on which the app will run
-EXPOSE 3001
+EXPOSE 4000
 
 # Start the server using the production build
 CMD ["node", "dist/main.js"]
