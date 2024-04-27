@@ -1,12 +1,12 @@
-import { createUser, deleteUser, getUserTest, getUsers, updateUser } from "../controllers/users.controller";
+import { registerValidator } from "../validators/auth";
+import { createUser, deleteUser, getUsers, updateUser } from "../controllers/users.controller";
 import { Router } from "express";
 
 const router = Router();
 
 router.get("/", getUsers);
-router.post("/", createUser);
+router.post("/", registerValidator, createUser);
 router.delete("/:id", deleteUser);
 router.put("/:id", updateUser);
-router.get("/test", getUserTest);
 
 export default router;

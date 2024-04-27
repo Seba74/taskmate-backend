@@ -1,33 +1,27 @@
 import * as jwt from 'jsonwebtoken'
 import * as dotenv from 'dotenv'
-dotenv.config()
 
-export const generateFBToken = (): string => {
-	const accessKey = ''
-	const payload = ''
-	return jwt.sign({ data: payload }, accessKey, { expiresIn: '20y' })
-}
+dotenv.config()
+const accessKey = process.env.SEED_JWT
 
 export const generateAccessToken = (payload: any): string => {
-	const accessKey = ''
-	return jwt.sign(payload, accessKey, { expiresIn: '30d' })
+	try {
+		return jwt.sign(payload, accessKey, { expiresIn: '30d' })
+	} catch (error) {
+		throw new Error(error)
+	}
 }
 
 export const validateToken = async (token: string) => {
-	const accessKey = ''
 	try {
 		const decoded = jwt.verify(token, accessKey)
-		if (typeof decoded === 'string') {
-			throw new Error('Invalid token')
-		}
+		if (typeof decoded === 'string') throw new Error('Invalid token')
+
 		const payload = decoded
 		const { iat, exp, ...data } = payload
 
 		const accessToken = generateAccessToken(data as any)
-		return {
-			accessToken,
-			payload,
-		}
+		return { accessToken, payload }
 	} catch (error) {
 		throw new Error(error)
 	}
