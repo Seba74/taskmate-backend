@@ -8,11 +8,117 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  name      String
-  last_name String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String   @id @default(cuid())
+  name            String
+  last_name       String
+  profile_picture String   @default("")
+  email           String   @unique
+  password        String
+  status          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Project {
+  id              String         @id @default(cuid())
+  name            String
+  description     String
+  project_picture String         @default("")
+  status          Boolean        @default(true)
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+  Collaborator    Collaborator[]
+  Task            Task[]
+}
+
+model Role {
+  id           String         @id @default(cuid())
+  description  String
+  status       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  Collaborator Collaborator[]
+}
+
+model Collaborator {
+  id                   String                 @id @default(cuid())
+  project              Project                @relation(fields: [projectId], references: [id])
+  role                 Role                   @relation(fields: [roleId], references: [id])
+  projectId            String
+  roleId               String
+  status               Boolean                @default(true)
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  CollaboratorsOnTasks CollaboratorsOnTasks[]
+  Comments             Comments[]
+}
+
+model TaskStatus {
+  id          String   @id @default(cuid())
+  description String
+  status      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  Task        Task[]
+}
+
+model TaskResourceType {
+  id           String         @id @default(cuid())
+  description  String
+  status       Boolean        @default(true)
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  TaskResource TaskResource[]
+}
+
+model TaskResource {
+  id                 String           @id @default(cuid())
+  taskResourceType   TaskResourceType @relation(fields: [taskResourceTypeId], references: [id])
+  taskResourceTypeId String
+  description        String
+  status             Boolean          @default(true)
+  createdAt          DateTime         @default(now())
+  updatedAt          DateTime         @updatedAt
+  Task               Task[]
+}
+
+model Task {
+  id                   String                 @id @default(cuid())
+  project              Project                @relation(fields: [projectId], references: [id])
+  taskStatus           TaskStatus             @relation(fields: [taskStatusId], references: [id])
+  taskResource         TaskResource           @relation(fields: [taskResourceId], references: [id])
+  description          String
+  start_date           DateTime
+  end_date             DateTime
+  status               Boolean                @default(true)
+  projectId            String
+  taskStatusId         String
+  taskResourceId       String
+  createdAt            DateTime               @default(now())
+  updatedAt            DateTime               @updatedAt
+  CollaboratorsOnTasks CollaboratorsOnTasks[]
+  Comments             Comments[]
+}
+
+model CollaboratorsOnTasks {
+  id             String       @id @default(cuid())
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  task           Task         @relation(fields: [taskId], references: [id])
+  collaboratorId String
+  taskId         String
+  status         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+}
+
+model Comments {
+  id             String       @id @default(cuid())
+  task           Task         @relation(fields: [taskId], references: [id])
+  collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
+  comment        String
+  taskId         String
+  collaboratorId String
+  status         Boolean      @default(true)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
