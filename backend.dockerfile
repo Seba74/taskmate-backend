@@ -2,7 +2,7 @@
 FROM node:21
 
 # Install pnpm
-RUN npm install -g pnpm
+RUN npm install -g pnpm@8
 
 # Create app directory
 WORKDIR /usr/src/app
