@@ -3,7 +3,6 @@ import { Response, Request } from 'express'
 import { AuthService } from '../services/auth.service'
 import { Payload } from '../interfaces/auth.dto'
 
-// AuthService
 const authService = new AuthService()
 
 export const login = async (req: Request, res: Response) => {

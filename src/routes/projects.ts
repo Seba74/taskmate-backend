@@ -1,11 +1,11 @@
-import { Router } from "express";
-import { getProjects, createProjects } from '../controllers/projects.controller';
-import { createProjectsValidator } from "../validators/projects";
+import { Router } from 'express'
+import { getProjects, createProjects } from '../controllers/projects.controller'
+import { createProjectsValidator } from '../validators/projects'
+import { tokenAuthMiddleware } from '../middlewares/validateToken'
 
-const router = Router();
+const router = Router()
 
-router.get("/", getProjects);
-router.post("/", createProjectsValidator, createProjects);
+router.get('/', tokenAuthMiddleware, getProjects)
+router.post('/', tokenAuthMiddleware, createProjectsValidator, createProjects)
 
-
-export default router;
+export default router

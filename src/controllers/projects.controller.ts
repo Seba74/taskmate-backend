@@ -11,13 +11,19 @@ export const getProjects = async (req: Request, res: Response) => {
 	} catch (error) {
 		handleError(res, error)
 	}
-}  
+}
 
 export const createProjects = async (req: Request, res: Response) => {
-	try{
-		const {name, description, project_picture} = req.body
-		const project = await projectsService.createProjects({name, description, project_picture})
-		handleSuccess(res, project)
+	try {
+		const { name, description, project_picture, userId } = req.body
+
+		const data = await projectsService.createProject({
+			name,
+			description,
+			project_picture,
+			userId,
+		})
+		handleSuccess(res, data)
 	} catch (error) {
 		handleError(res, error)
 	}

@@ -2,7 +2,6 @@ import { Collaborator } from './collaborator.dto'
 
 export interface Role {
 	id: string
-	name: string
 	description: string
 	status: boolean
 	createdAt: Date
@@ -11,6 +10,5 @@ export interface Role {
 }
 
 export interface CreateRole {
-	name: string
 	description: string
 }

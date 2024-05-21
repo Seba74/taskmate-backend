@@ -9,9 +9,9 @@ export const handleError = (res: Response, error: any) => {
 				{
 					name: error.name,
 					message: error.message,
-				}
+				},
 			],
-		}
+		},
 	})
 }
 
@@ -21,6 +21,6 @@ export const handleSuccess = (res: Response, data: any) => {
 		response: {
 			data,
 			errors: null,
-		}
+		},
 	})
 }

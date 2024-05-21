@@ -8,6 +8,7 @@ export interface Project {
 }
 
 export interface CreateProject {
+	userId: string
 	name: string
 	description: string
 	project_picture?: string
