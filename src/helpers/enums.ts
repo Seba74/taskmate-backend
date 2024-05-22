@@ -1,10 +1,10 @@
 export enum Role {
 	Admin = 'Admin',
-	Collaborator = 'Collaborator',
+	Collaborator = 'Colaborador',
 }
 
 export enum TaskStatus {
-	OnProcess = 'On process',
-	Completed = 'Completed',
-	Rejected = 'Rejected',
+	OnProcess = 'En Proceso',
+	Completed = 'Completada',
+	Rejected = 'Rechazada',
 }

@@ -1,20 +1,11 @@
-import {  PrismaClient } from '@prisma/client'
-import { CreateProject } from '../interfaces/project.dto'
-import {CreateCollaboratorsOnTasks} from '../interfaces/collaboratorOnTasks.dto'
+import { PrismaClient } from '@prisma/client'
+import { CreateCollaboratorsOnTasks } from '../interfaces/collaboratorOnTasks.dto'
 const prisma = new PrismaClient()
 
 export class CollaboratorsService {
 	getCollaborators = async () => {
 		try {
-			return prisma.collaborator.findMany()
-		} catch (error) {
-			return { name: 'Collaborators Error', message: error.message }
-		}
-	}
-
-	createCollaborators = async (data: CreateProject) => {
-		try {
-			return prisma.project.create({ data })
+			return prisma.collaborator.findMany({ where: { status: true } })
 		} catch (error) {
 			return { name: 'Collaborators Error', message: error.message }
 		}
@@ -26,13 +17,13 @@ export class CollaboratorsService {
 				where: { id: data.collaboratorId },
 			})
 
-			if (!collaborator) return { name: 'Collaborators Error', message: 'El colaborador no existe' }
+			if (!collaborator) throw new Error('El colaborador no existe')
 
 			const task = await prisma.task.findUnique({
 				where: { id: data.taskId },
 			})
 
-			if (!task) return { name: 'Collaborators Error', message: 'La tarea no existe' }
+			if (!task) throw new Error('La tarea no existe')
 
 			const collaboratorOnTask = await prisma.collaboratorsOnTasks.create({
 				data: {
@@ -53,7 +44,7 @@ export class CollaboratorsService {
 				where: { collaboratorId: data.collaboratorId, taskId: data.taskId },
 			})
 
-			if (!collaboratorOnTask) return { name: 'Collaborators Error', message: 'El colaborador no esta asignado a la tarea' }
+			if (!collaboratorOnTask) throw new Error('El colaborador no está asignado a la tarea')
 
 			return prisma.collaboratorsOnTasks.delete({ where: { id: collaboratorOnTask.id } })
 		} catch (error) {

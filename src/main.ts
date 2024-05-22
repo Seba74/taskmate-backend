@@ -11,7 +11,6 @@ const app: express.Application = express()
 const port: number = parseInt(process.env.PORT || '4000')
 const server = createServer(app)
 
-
 const startServer = (callback: () => void) => {
 	server.listen(port, () => {
 		callback()

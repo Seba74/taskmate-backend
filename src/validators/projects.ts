@@ -2,7 +2,7 @@ import { check } from 'express-validator'
 import { NextFunction, Request, Response } from 'express'
 import { validate } from '../helpers/validator.helper'
 
-export const createProjectsValidator = [
+export const projectValidator = [
 	check('name')
 		.exists()
 		.withMessage('Se requiere un nombre de proyecto')

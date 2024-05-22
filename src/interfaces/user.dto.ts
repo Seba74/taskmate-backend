@@ -11,3 +11,10 @@ export interface User {
 	updatedAt: Date
 	Collaborator: Collaborator[]
 }
+
+export interface UpdateUser {
+	name: string
+	last_name: string
+	profile_picture: string
+	email: string
+}

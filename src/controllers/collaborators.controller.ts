@@ -15,14 +15,13 @@ export const getCollaborators = async (req: Request, res: Response) => {
 
 export const asignCollaboratorToTask = async (req: Request, res: Response) => {
 	try {
-        const {collaboratorId,taskId} = req.body
-		const collaboratorOnTask = await collaboratorsService.asignCollaboratorToTask({collaboratorId,taskId})
+		const { collaboratorId, taskId } = req.body
+		const collaboratorOnTask = await collaboratorsService.asignCollaboratorToTask({
+			collaboratorId,
+			taskId,
+		})
 		handleSuccess(res, collaboratorOnTask)
 	} catch (error) {
 		handleError(res, error)
 	}
 }
-
-
-
-

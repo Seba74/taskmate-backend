@@ -43,13 +43,11 @@ export class ProjectsService {
 	}
 
 	addCollaborator = async (projectId: string, userId: string) => {
-		try{
+		try {
 			const project = await prisma.project.findUnique({ where: { id: projectId } })
-
 			if (!project) throw new Error('El proyecto no existe')
 
 			const user = await prisma.user.findUnique({ where: { id: userId } })
-
 			if (!user) throw new Error('El usuario no existe')
 
 			const collaborator = await prisma.collaborator.create({
@@ -59,10 +57,8 @@ export class ProjectsService {
 					projectId: project.id,
 				},
 			})
-			
 			return collaborator
-		}
-		catch (error) {
+		} catch (error) {
 			return { name: 'Projects Error', message: error.message }
 		}
 	}

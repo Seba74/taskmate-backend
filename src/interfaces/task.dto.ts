@@ -27,3 +27,9 @@ export interface CreateTask {
 	start_date: Date
 	end_date: Date
 }
+
+export interface UpdateTask {
+	description: string
+	start_date: Date
+	end_date: Date
+}
