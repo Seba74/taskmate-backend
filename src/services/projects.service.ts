@@ -6,7 +6,7 @@ const prisma = new PrismaClient()
 export class ProjectsService {
 	getProjects = async () => {
 		try {
-			return prisma.project.findMany()
+			return prisma.project.findMany({ where: { status: true } })
 		} catch (error) {
 			return { name: 'Projects Error', message: error.message }
 		}

@@ -17,7 +17,7 @@ model User {
   status          Boolean        @default(true)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  Collaborator    Collaborator[]
+  collaborators   Collaborator[]
 }
 
 model Project {
@@ -28,17 +28,17 @@ model Project {
   status          Boolean        @default(true)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
-  Collaborator    Collaborator[]
-  Task            Task[]
+  collaborators   Collaborator[]
+  tasks           Task[]
 }
 
 model Role {
-  id           String         @id @default(cuid())
-  description  String
-  status       Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  Collaborator Collaborator[]
+  id            String         @id @default(cuid())
+  description   String         @unique
+  status        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  collaborators Collaborator[]
 }
 
 model Collaborator {
@@ -52,8 +52,8 @@ model Collaborator {
   status               Boolean                @default(true)
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
-  CollaboratorsOnTasks CollaboratorsOnTasks[]
-  Comments             Comments[]
+  collaboratorsOnTasks CollaboratorsOnTasks[]
+  comments             Comments[]
 }
 
 model TaskStatus {
@@ -62,16 +62,16 @@ model TaskStatus {
   status      Boolean  @default(true)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  Task        Task[]
+  tasks       Task[]
 }
 
 model TaskResourceType {
-  id           String         @id @default(cuid())
-  description  String
-  status       Boolean        @default(true)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime       @updatedAt
-  TaskResource TaskResource[]
+  id            String         @id @default(cuid())
+  description   String
+  status        Boolean        @default(true)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  taskResources TaskResource[]
 }
 
 model TaskResource {
@@ -100,7 +100,7 @@ model Task {
   updatedAt            DateTime               @updatedAt
   CollaboratorsOnTasks CollaboratorsOnTasks[]
   Comments             Comments[]
-  TaskResource         TaskResource[]
+  taskResources        TaskResource[]
 }
 
 model CollaboratorsOnTasks {
