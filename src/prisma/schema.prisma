@@ -98,8 +98,8 @@ model Task {
   taskStatusId         String
   createdAt            DateTime               @default(now())
   updatedAt            DateTime               @updatedAt
-  CollaboratorsOnTasks CollaboratorsOnTasks[]
-  Comments             Comments[]
+  collaboratorsOnTasks CollaboratorsOnTasks[]
+  comments             Comments[]
   taskResources        TaskResource[]
 }
 

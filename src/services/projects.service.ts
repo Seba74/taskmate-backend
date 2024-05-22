@@ -18,7 +18,7 @@ export class ProjectsService {
 				where: { id: data.userId },
 			})
 
-			if (!user) return { name: 'Projects Error', message: 'El Usuario no existe' }
+			if (!user) throw new Error('El usuario no existe')
 
 			const project = await prisma.project.create({
 				data: {
@@ -38,6 +38,31 @@ export class ProjectsService {
 
 			return { project, collaborator }
 		} catch (error) {
+			return { name: 'Projects Error', message: error.message }
+		}
+	}
+
+	addCollaborator = async (projectId: string, userId: string) => {
+		try{
+			const project = await prisma.project.findUnique({ where: { id: projectId } })
+
+			if (!project) throw new Error('El proyecto no existe')
+
+			const user = await prisma.user.findUnique({ where: { id: userId } })
+
+			if (!user) throw new Error('El usuario no existe')
+
+			const collaborator = await prisma.collaborator.create({
+				data: {
+					roleId: (await prisma.role.findFirst({ where: { description: Role.Collaborator } })).id,
+					userId: user.id,
+					projectId: project.id,
+				},
+			})
+			
+			return collaborator
+		}
+		catch (error) {
 			return { name: 'Projects Error', message: error.message }
 		}
 	}

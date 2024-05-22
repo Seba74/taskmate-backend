@@ -1,6 +1,10 @@
 export enum Role {
-	Admin = 'admin',
-	Developer = 'developer',
-	Designer = 'designer',
-	Tester = 'tester,',
+	Admin = 'Admin',
+	Collaborator = 'Collaborator',
+}
+
+export enum TaskStatus {
+	OnProcess = 'On process',
+	Completed = 'Completed',
+	Rejected = 'Rejected',
 }

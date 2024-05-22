@@ -28,3 +28,14 @@ export const createProjects = async (req: Request, res: Response) => {
 		handleError(res, error)
 	}
 }
+
+export const addCollaborator = async (req: Request, res: Response) => {
+	try {
+		const { projectId, userId } = req.body
+
+		const data = await projectsService.addCollaborator(projectId, userId)
+		handleSuccess(res, data)
+	} catch (error) {
+		handleError(res, error)
+	}
+}

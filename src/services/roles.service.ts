@@ -21,6 +21,8 @@ export class RolesService {
 
 	createRole = async (data: CreateRole) => {
 		try {
+			const role = await prisma.role.findFirst({ where: { description: data.description } })
+			if(role) throw new Error('Role already exists')
 			return prisma.role.create({ data })
 		} catch (error) {
 			return { name: 'Roles Error', message: error.message }

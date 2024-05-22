@@ -7,7 +7,9 @@ import { TaskStatus } from './taskStatus.dto'
 export interface Task {
 	id: string
 	project: Project
+	projectId: string
 	taskStatus: TaskStatus
+	taskStatusId: string
 	description: string
 	start_date: Date
 	end_date: Date
@@ -21,7 +23,6 @@ export interface Task {
 
 export interface CreateTask {
 	projectId: string
-	taskStatusId: string
 	description: string
 	start_date: Date
 	end_date: Date
