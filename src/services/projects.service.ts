@@ -12,6 +12,22 @@ export class ProjectsService {
 		}
 	}
 
+	getProjectsByUser = async (userId: string) => {
+		try {
+
+			const userExists = await prisma.user.findUnique({ where: { id: userId } })
+			if (!userExists) throw new Error('El usuario no existe')
+
+			const projects = await prisma.project.findMany({
+				where: { status: true, collaborators: { some: { userId } } },
+				include: { collaborators: true },
+			})
+			return projects
+		} catch (error) {
+			return { name: 'Projects Error', message: error.message }
+		}
+	}
+
 	createProject = async (data: CreateProject) => {
 		try {
 			const user = await prisma.user.findUnique({

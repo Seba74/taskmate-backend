@@ -13,6 +13,16 @@ export const getProjects = async (req: Request, res: Response) => {
 	}
 }
 
+export const getProjectsByUser = async (req: Request, res: Response) => {
+	try {
+		const { userId } = req.params
+		const projects = await projectsService.getProjectsByUser(userId)
+		handleSuccess(res, projects)
+	} catch (error) {
+		handleError(res, error)
+	}
+}
+
 export const createProjects = async (req: Request, res: Response) => {
 	try {
 		const { name, description, project_picture, userId } = req.body
