@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateTask, UpdateTask } from '../interfaces/task.dto'
 import { TaskStatus } from '../helpers/enums'
+import { ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class TasksService {
@@ -23,7 +24,7 @@ export class TasksService {
 
 			return task
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			throw new ErrorTM('Tasks Error', error.message)
 		}
 	}
 
@@ -34,7 +35,7 @@ export class TasksService {
 
 			return prisma.task.update({ where: { id }, data: { ...data } })
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			throw new ErrorTM('Tasks Error', error.message)
 		}
 	}
 

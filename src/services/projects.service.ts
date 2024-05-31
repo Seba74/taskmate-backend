@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateProject } from '../interfaces/project.dto'
 import { Role } from '../helpers/enums'
+import { ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class ProjectsService {
@@ -8,7 +9,7 @@ export class ProjectsService {
 		try {
 			return prisma.project.findMany({ where: { status: true } })
 		} catch (error) {
-			return { name: 'Projects Error', message: error.message }
+			throw new ErrorTM('Projects Error', error.message)
 		}
 	}
 
@@ -24,7 +25,7 @@ export class ProjectsService {
 			})
 			return projects
 		} catch (error) {
-			return { name: 'Projects Error', message: error.message }
+			throw new ErrorTM('Projects Error', error.message)
 		}
 	}
 
@@ -54,7 +55,7 @@ export class ProjectsService {
 
 			return { project, collaborator }
 		} catch (error) {
-			return { name: 'Projects Error', message: error.message }
+			throw new ErrorTM('Projects Error', error.message)
 		}
 	}
 
@@ -75,7 +76,7 @@ export class ProjectsService {
 			})
 			return collaborator
 		} catch (error) {
-			return { name: 'Projects Error', message: error.message }
+			throw new ErrorTM('Projects Error', error.message)
 		}
 	}
 }

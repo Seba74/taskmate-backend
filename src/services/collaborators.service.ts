@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateCollaboratorsOnTasks } from '../interfaces/collaboratorOnTasks.dto'
+import { ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class CollaboratorsService {
@@ -7,7 +8,7 @@ export class CollaboratorsService {
 		try {
 			return prisma.collaborator.findMany({ where: { status: true } })
 		} catch (error) {
-			return { name: 'Collaborators Error', message: error.message }
+			throw new ErrorTM('Collaborators Error', error.message)
 		}
 	}
 
@@ -34,7 +35,7 @@ export class CollaboratorsService {
 
 			return collaboratorOnTask
 		} catch (error) {
-			return { name: 'Collaborators Error', message: error.message }
+			throw new ErrorTM('Collaborators Error', error.message)
 		}
 	}
 
@@ -48,7 +49,7 @@ export class CollaboratorsService {
 
 			return prisma.collaboratorsOnTasks.delete({ where: { id: collaboratorOnTask.id } })
 		} catch (error) {
-			return { name: 'Collaborators Error', message: error.message }
+			throw new ErrorTM('Collaborators Error', error.message)
 		}
 	}
 }

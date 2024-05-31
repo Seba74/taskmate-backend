@@ -2,6 +2,7 @@ import { generateAccessToken } from '../config/jwt'
 import { Auth, AuthRegister, Payload } from '../interfaces/auth.dto'
 import * as bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
+import { ErrorTM } from '../helpers/error.helper'
 
 const prisma = new PrismaClient()
 
@@ -11,8 +12,9 @@ export class AuthService {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
 			if (!user) throw new Error('Usuario o contraseña incorrectos')
-			const match = await bcrypt.compare(authData.password, user.password)
-
+			console.log(user)
+		const match = await bcrypt.compare(authData.password, user.password)
+		
 			if (!match) {
 				throw new Error('Usuario o contraseña incorrectos')
 			}
@@ -24,10 +26,10 @@ export class AuthService {
 				email: user.email,
 			}
 			const token = generateAccessToken(payload)
-
+			
 			return token
 		} catch (error) {
-			return { name: 'Login Error', message: error.message }
+			throw new ErrorTM('Login Error', error.message)
 		}
 	}
 
@@ -57,7 +59,7 @@ export class AuthService {
 
 			return token
 		} catch (error) {
-			return { name: 'Register Error', message: error.message }
+			throw new ErrorTM('Register Error', error.message)
 		}
 	}
 
@@ -68,7 +70,7 @@ export class AuthService {
 			if (!user) throw new Error('Invalid token')
 			return generateAccessToken(data as Payload)
 		} catch (error) {
-			return { name: 'Check Token Error', message: error.message }
+			throw new ErrorTM('Check Token Error', error.message)
 		}
 	}
 }

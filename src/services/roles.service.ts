@@ -1,13 +1,14 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateRole } from '../interfaces/role.dto'
+import { ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class RolesService {
 	getRoles = async () => {
 		try {
-			return prisma.role.findMany({ where: { status: true }})
+			return prisma.role.findMany({ where: { status: true } })
 		} catch (error) {
-			return { name: 'Roles Error', message: error.message }
+			throw new ErrorTM('Roles Error', error.message)
 		}
 	}
 
@@ -15,7 +16,7 @@ export class RolesService {
 		try {
 			return prisma.role.findUnique({ where: { id, status: true } })
 		} catch (error) {
-			return { name: 'Roles Error', message: error.message }
+			throw new ErrorTM('Roles Error', error.message)
 		}
 	}
 
@@ -26,7 +27,7 @@ export class RolesService {
 
 			return prisma.role.create({ data })
 		} catch (error) {
-			return { name: 'Roles Error', message: error.message }
+			throw new ErrorTM('Roles Error', error.message)
 		}
 	}
 
@@ -34,7 +35,7 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			return { name: 'Roles Error', message: error.message }
+			throw new ErrorTM('Roles Error', error.message)
 		}
 	}
 
@@ -42,7 +43,7 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			return { name: 'Roles Error', message: error.message }
+			throw new ErrorTM('Roles Error', error.message)
 		}
 	}
 }
