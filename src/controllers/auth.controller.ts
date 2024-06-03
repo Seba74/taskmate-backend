@@ -9,7 +9,6 @@ export const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body
 		const token = await authService.login({ email, password })
-		console.log('get error?');
 		
 		handleSuccess(res, token)
 	} catch (error) {
