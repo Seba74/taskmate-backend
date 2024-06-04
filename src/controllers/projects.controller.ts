@@ -23,15 +23,16 @@ export const getProjectsByUser = async (req: Request, res: Response) => {
 	}
 }
 
-export const createProjects = async (req: Request, res: Response) => {
+export const createProject = async (req: any, res: Response) => {
 	try {
-		const { name, description, project_picture, userId } = req.body
+		const { title, description, project_picture } = req.body
+		const user = req.user
 
 		const data = await projectsService.createProject({
-			name,
+			title,
 			description,
 			project_picture,
-			userId,
+			userId: user.id
 		})
 		handleSuccess(res, data)
 	} catch (error) {

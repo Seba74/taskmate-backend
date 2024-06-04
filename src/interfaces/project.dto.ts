@@ -9,7 +9,7 @@ export interface Project {
 
 export interface CreateProject {
 	userId: string
-	name: string
+	title: string
 	description: string
 	project_picture?: string
 }

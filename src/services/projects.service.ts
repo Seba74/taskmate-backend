@@ -39,7 +39,7 @@ export class ProjectsService {
 
 			const project = await prisma.project.create({
 				data: {
-					name: data.name,
+					name: data.title,
 					description: data.description,
 					project_picture: data.project_picture,
 				},
