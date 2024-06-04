@@ -29,7 +29,7 @@ export class AuthService {
 			
 			return token
 		} catch (error) {
-			throw new ErrorTM('Login Error', error.message)
+			throw new ErrorTM('Error al iniciar sesión', error.message)
 		}
 	}
 
@@ -59,7 +59,7 @@ export class AuthService {
 
 			return token
 		} catch (error) {
-			throw new ErrorTM('Register Error', error.message)
+			throw new ErrorTM('Error al intentar Registrar', error.message)
 		}
 	}
 
@@ -70,7 +70,7 @@ export class AuthService {
 			if (!user) throw new Error('Invalid token')
 			return generateAccessToken(data as Payload)
 		} catch (error) {
-			throw new ErrorTM('Check Token Error', error.message)
+			throw new ErrorTM('Error al mantener la sesión', error.message)
 		}
 	}
 }

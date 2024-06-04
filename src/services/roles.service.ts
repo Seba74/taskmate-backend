@@ -8,7 +8,7 @@ export class RolesService {
 		try {
 			return prisma.role.findMany({ where: { status: true } })
 		} catch (error) {
-			throw new ErrorTM('Roles Error', error.message)
+			throw new ErrorTM('Error al intentar cargar los roles', error.message)
 		}
 	}
 
@@ -16,7 +16,7 @@ export class RolesService {
 		try {
 			return prisma.role.findUnique({ where: { id, status: true } })
 		} catch (error) {
-			throw new ErrorTM('Roles Error', error.message)
+			throw new ErrorTM('Error al obtener el rol', error.message)
 		}
 	}
 
@@ -27,7 +27,7 @@ export class RolesService {
 
 			return prisma.role.create({ data })
 		} catch (error) {
-			throw new ErrorTM('Roles Error', error.message)
+			throw new ErrorTM('Error al intentar crear el rol', error.message)
 		}
 	}
 
@@ -35,7 +35,7 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			throw new ErrorTM('Roles Error', error.message)
+			throw new ErrorTM('Error al intentar modificar el rol', error.message)
 		}
 	}
 
@@ -43,7 +43,7 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			throw new ErrorTM('Roles Error', error.message)
+			throw new ErrorTM('Error al intentar eliminar el role', error.message)
 		}
 	}
 }

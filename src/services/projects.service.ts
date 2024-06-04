@@ -25,7 +25,7 @@ export class ProjectsService {
 			})
 			return projects
 		} catch (error) {
-			throw new ErrorTM('Projects Error', error.message)
+			throw new ErrorTM('Error al obtener los proyectos', error.message)
 		}
 	}
 
@@ -55,10 +55,10 @@ export class ProjectsService {
 
 			return { project, collaborator }
 		} catch (error) {
-			throw new ErrorTM('Projects Error', error.message)
+			throw new ErrorTM('Error al crear un proyecto', error.message)
 		}
 	}
-
+	
 	addCollaborator = async (projectId: string, userId: string) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: projectId } })
@@ -76,7 +76,7 @@ export class ProjectsService {
 			})
 			return collaborator
 		} catch (error) {
-			throw new ErrorTM('Projects Error', error.message)
+			throw new ErrorTM('Error al agregar un colaborador', error.message)
 		}
 	}
 }

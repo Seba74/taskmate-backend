@@ -35,7 +35,7 @@ export class CollaboratorsService {
 
 			return collaboratorOnTask
 		} catch (error) {
-			throw new ErrorTM('Collaborators Error', error.message)
+			throw new ErrorTM('No se pudo asignar un colaborador', error.message)
 		}
 	}
 
@@ -49,7 +49,7 @@ export class CollaboratorsService {
 
 			return prisma.collaboratorsOnTasks.delete({ where: { id: collaboratorOnTask.id } })
 		} catch (error) {
-			throw new ErrorTM('Collaborators Error', error.message)
+			throw new ErrorTM('Error al intentar eliminar al colaborador', error.message)
 		}
 	}
 }

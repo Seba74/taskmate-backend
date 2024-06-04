@@ -24,7 +24,7 @@ export class TasksService {
 
 			return task
 		} catch (error) {
-			throw new ErrorTM('Tasks Error', error.message)
+			throw new ErrorTM('Error al intentar crear la tarea', error.message)
 		}
 	}
 
@@ -35,7 +35,7 @@ export class TasksService {
 
 			return prisma.task.update({ where: { id }, data: { ...data } })
 		} catch (error) {
-			throw new ErrorTM('Tasks Error', error.message)
+			throw new ErrorTM('Error al intentar modificar la tarea', error.message)
 		}
 	}
 
@@ -46,7 +46,7 @@ export class TasksService {
 
 			return prisma.task.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			return { name: 'Error al elminar la tarea', message: error.message }
 		}
 	}
 
@@ -57,7 +57,7 @@ export class TasksService {
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			return { name: 'Error al obtener las tareas', message: error.message }
 		}
 	}
 
@@ -68,7 +68,7 @@ export class TasksService {
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			return { name: 'Error al obtener el estado de las tareas', message: error.message }
 		}
 	}
 
@@ -85,7 +85,7 @@ export class TasksService {
 			const tasks = collaboratorOnTask.map((cot) => cot.task)
 			return tasks
 		} catch (error) {
-			return { name: 'Tasks Error', message: error.message }
+			return { name: 'Error al obtener tareas', message: error.message }
 		}
 	}
 }

@@ -8,7 +8,7 @@ export class TasksStatusService {
 		try {
 			return prisma.taskStatus.findMany({ where: { status: true } })
 		} catch (error) {
-			throw new ErrorTM('TasksStatus Error', error.message)
+			throw new ErrorTM('Error al obtener los estado de las tareas', error.message)
 		}
 	}
 
@@ -16,7 +16,7 @@ export class TasksStatusService {
 		try {
 			return prisma.taskStatus.findUnique({ where: { id, status: true } })
 		} catch (error) {
-			throw new ErrorTM('TasksStatus Error', error.message)
+			throw new ErrorTM('Error al obtener el estado de la tarea', error.message)
 		}
 	}
 
@@ -29,7 +29,7 @@ export class TasksStatusService {
 
 			return prisma.taskStatus.create({ data })
 		} catch (error) {
-			throw new ErrorTM('TasksStatus Error', error.message)
+			throw new ErrorTM('Error al crear un nuevo estado', error.message)
 		}
 	}
 
@@ -40,7 +40,7 @@ export class TasksStatusService {
 
 			return prisma.taskStatus.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			throw new ErrorTM('TasksStatus Error', error.message)
+			throw new ErrorTM('Error al intentar modificar el estado', error.message)
 		}
 	}
 
@@ -51,7 +51,7 @@ export class TasksStatusService {
 
 			return prisma.taskStatus.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			throw new ErrorTM('TasksStatus Error', error.message)
+			throw new ErrorTM('Error al eliminar un estado', error.message)
 		}
 	}
 }
