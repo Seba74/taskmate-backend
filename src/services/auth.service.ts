@@ -84,7 +84,8 @@ export class AuthService {
 			const { iat, exp, ...data } = payload
 			const user = await prisma.user.findUnique({ where: { id: data.id } })
 			if (!user) throw new Error('Invalid token')
-			return generateAccessToken(data as Payload)
+			const newToken = generateAccessToken(data as Payload)
+			return { token: newToken, user }
 		} catch (error) {
 			throw new ErrorTM('Error al mantener la sesión', error.message)
 		}
