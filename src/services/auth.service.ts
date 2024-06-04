@@ -13,8 +13,8 @@ export class AuthService {
 
 			if (!user) throw new Error('Usuario o contraseña incorrectos')
 			console.log(user)
-		const match = await bcrypt.compare(authData.password, user.password)
-		
+			const match = await bcrypt.compare(authData.password, user.password)
+
 			if (!match) {
 				throw new Error('Usuario o contraseña incorrectos')
 			}
@@ -26,8 +26,16 @@ export class AuthService {
 				email: user.email,
 			}
 			const token = generateAccessToken(payload)
-			
-			return token
+
+			return {
+				token,
+				user: {
+					id: user.id,
+					name: user.name,
+					last_name: user.last_name,
+					email: user.email,
+				},
+			}
 		} catch (error) {
 			throw new ErrorTM('Error al iniciar sesión', error.message)
 		}
@@ -57,7 +65,15 @@ export class AuthService {
 			}
 			const token = generateAccessToken(payload)
 
-			return token
+			return {
+				token,
+				user: {
+					id: newUser.id,
+					name: newUser.name,
+					last_name: newUser.last_name,
+					email: newUser.email,
+				},
+			}
 		} catch (error) {
 			throw new ErrorTM('Error al intentar Registrar', error.message)
 		}

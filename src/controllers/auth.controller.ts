@@ -8,9 +8,9 @@ const authService = new AuthService()
 export const login = async (req: Request, res: Response) => {
 	try {
 		const { email, password } = req.body
-		const token = await authService.login({ email, password })
+		const data = await authService.login({ email, password })
 		
-		handleSuccess(res, token)
+		handleSuccess(res, data)
 	} catch (error) {
 		handleError(res, error)
 	}
