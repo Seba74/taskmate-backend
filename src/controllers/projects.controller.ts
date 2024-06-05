@@ -25,7 +25,7 @@ export const getProjectsByUser = async (req: Request, res: Response) => {
 
 export const createProject = async (req: any, res: Response) => {
 	try {
-		const { title, description, project_picture } = req.body
+		const { title, description } = req.body
 		const user = req.user
 		const image = req.file
 

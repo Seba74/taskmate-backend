@@ -1,4 +1,4 @@
-import { generateAccessToken } from '../config/jwt'
+import { generateAccessToken } from '../libs/jwt'
 import { Auth, AuthRegister, Payload } from '../interfaces/auth.dto'
 import * as bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
