@@ -1,5 +1,5 @@
 import { Response, NextFunction } from 'express'
-import { validateToken } from '../config/jwt'
+import { validateToken } from '../libs/jwt'
 import { handleError } from '../helpers/response.helper'
 
 export const tokenAuthMiddleware = async (req: any, res: Response, next: NextFunction) => {
