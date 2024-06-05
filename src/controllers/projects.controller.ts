@@ -27,11 +27,12 @@ export const createProject = async (req: any, res: Response) => {
 	try {
 		const { title, description, project_picture } = req.body
 		const user = req.user
+		const image = req.file
 
 		const data = await projectsService.createProject({
 			title,
 			description,
-			project_picture,
+			project_picture: image.filename,
 			userId: user.id
 		})
 		handleSuccess(res, data)
