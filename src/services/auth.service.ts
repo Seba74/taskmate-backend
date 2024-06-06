@@ -12,7 +12,6 @@ export class AuthService {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
 			if (!user) throw new Error('Usuario o contraseña incorrectos')
-			console.log(user)
 			const match = await bcrypt.compare(authData.password, user.password)
 
 			if (!match) {

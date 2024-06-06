@@ -19,6 +19,7 @@ const startServer = (callback: () => void) => {
 
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
+app.use(express.static('public'))
 
 app.options('*', cors())
 // Cors config
