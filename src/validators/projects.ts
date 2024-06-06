@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from 'express'
 import { validate } from '../helpers/validator.helper'
 
 export const projectValidator = [
-	check('name')
+	check('title')
 		.exists()
 		.withMessage('Se requiere un nombre de proyecto')
 		.isLength({ min: 3 })
