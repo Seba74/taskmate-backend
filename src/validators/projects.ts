@@ -5,9 +5,9 @@ import { validate } from '../helpers/validator.helper'
 export const projectValidator = [
 	check('title')
 		.exists()
-		.withMessage('Se requiere un nombre de proyecto')
+		.withMessage('Se requiere un titulo para el proyecto')
 		.isLength({ min: 3 })
-		.withMessage('El nombre del proyecto debe tener al menos 3 caracteres'),
+		.withMessage('El titulo del proyecto debe tener al menos 3 caracteres'),
 	check('description')
 		.exists()
 		.withMessage('Se requiere una descripción del proyecto')
