@@ -13,10 +13,10 @@ export const getProjects = async (req: Request, res: Response) => {
 	}
 }
 
-export const getProjectsByUser = async (req: Request, res: Response) => {
+export const getProjectsByUser = async (req: Request | any, res: Response) => {
 	try {
-		const { userId } = req.params
-		const projects = await projectsService.getProjectsByUser(userId)
+		const user = req.user
+		const projects = await projectsService.getProjectsByUser(user.id)
 		handleSuccess(res, projects)
 	} catch (error) {
 		handleError(res, error)

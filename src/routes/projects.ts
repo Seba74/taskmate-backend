@@ -7,8 +7,7 @@ import upload from '../libs/multer'
 
 const router = Router()
 
-router.get('/', tokenAuthMiddleware, getProjects)
-router.get('/:userId', tokenAuthMiddleware, getProjectsByUser)
+router.get('/', tokenAuthMiddleware, getProjectsByUser)
 router.post('/', tokenAuthMiddleware,  upload.single('image'), projectValidator, createProject)
 router.post('/add-collaborator', tokenAuthMiddleware, addCollaboratorValidator, addCollaborator)
 
