@@ -5,3 +5,10 @@ export class ErrorTM extends Error {
 		this.message = message
 	}
 }
+
+export class ErrorMessage extends Error {
+	constructor(message: string) {
+		super()
+		this.message = message
+	}
+}

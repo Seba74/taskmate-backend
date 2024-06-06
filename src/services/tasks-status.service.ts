@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateTaskStatus } from '../interfaces/taskStatus.dto'
-import { ErrorTM } from '../helpers/error.helper'
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class TasksStatusService {
@@ -38,11 +38,11 @@ export class TasksStatusService {
 			const taskStatus = await prisma.taskStatus.findFirst({
 				where: { description: data.description },
 			})
-			if (taskStatus) throw new ErrorTM('Ya existe un elemento con esta descripción')
+			if (taskStatus) throw new ErrorMessage('Ya existe un elemento con esta descripción')
 
 			return prisma.taskStatus.create({ data })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear el estado', error.message)
 			}
 
@@ -53,11 +53,11 @@ export class TasksStatusService {
 	updateTaskStatus = async (id: string, data: CreateTaskStatus) => {
 		try {
 			const taskStatus = await prisma.taskStatus.findUnique({ where: { id, status: true } })
-			if (!taskStatus) throw new ErrorTM('No se encontró el estado de la tarea')
+			if (!taskStatus) throw new ErrorMessage('No se encontró el estado de la tarea')
 
 			return prisma.taskStatus.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al modificar el estado', error.message)
 			}
 
@@ -68,11 +68,11 @@ export class TasksStatusService {
 	deleteTaskStatus = async (id: string) => {
 		try {
 			const taskStatus = await prisma.taskStatus.findUnique({ where: { id, status: true } })
-			if (!taskStatus) throw new ErrorTM('No se encontró el estado de la tarea')
+			if (!taskStatus) throw new ErrorMessage('No se encontró el estado de la tarea')
 
 			return prisma.taskStatus.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al eliminar el estado', error.message)
 			}
 

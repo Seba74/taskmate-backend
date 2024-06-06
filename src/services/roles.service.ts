@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateRole } from '../interfaces/role.dto'
-import { ErrorTM } from '../helpers/error.helper'
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class RolesService {
@@ -30,11 +30,11 @@ export class RolesService {
 	createRole = async (data: CreateRole) => {
 		try {
 			const role = await prisma.role.findFirst({ where: { description: data.description } })
-			if (role) throw new ErrorTM('El Rol ya existe')
+			if (role) throw new ErrorMessage('El Rol ya existe')
 
 			return prisma.role.create({ data })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear el rol', error.message)
 			}
 			throw new ErrorTM('Error al crear el rol', 'No se pudo crear el rol')

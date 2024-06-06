@@ -2,7 +2,7 @@ import { generateAccessToken } from '../libs/jwt'
 import { Auth, AuthRegister, Payload } from '../interfaces/auth.dto'
 import * as bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
-import { ErrorTM } from '../helpers/error.helper'
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper';
 
 const prisma = new PrismaClient()
 
@@ -11,11 +11,11 @@ export class AuthService {
 		try {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
-			if (!user) throw new ErrorTM('Usuario o contraseña incorrectos')
+			if (!user) throw new ErrorMessage('Usuario o contraseña incorrectos')
 			const match = await bcrypt.compare(authData.password, user.password)
 
 			if (!match) {
-				throw new ErrorTM('Usuario o contraseña incorrectos')
+				throw new ErrorMessage('Usuario o contraseña incorrectos')
 			}
 
 			const payload: Payload = {
@@ -36,7 +36,7 @@ export class AuthService {
 				},
 			}
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al iniciar sesión', error.message)
 			}
 
@@ -51,7 +51,7 @@ export class AuthService {
 		try {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
-			if (user) throw new ErrorTM('El correo ya está registrado')
+			if (user) throw new ErrorMessage('El correo ya está registrado')
 			const password = await bcrypt.hash(authData.password, 10)
 
 			const newUser = await prisma.user.create({
@@ -81,7 +81,7 @@ export class AuthService {
 				},
 			}
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al intentar Registrar', error.message)
 			}
 
@@ -96,11 +96,11 @@ export class AuthService {
 		try {
 			const { iat, exp, ...data } = payload
 			const user = await prisma.user.findUnique({ where: { id: data.id } })
-			if (!user) throw new Error('Invalid token')
+			if (!user) throw new ErrorMessage('El Token no es valido')
 			const newToken = generateAccessToken(data as Payload)
 			return { token: newToken, user }
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al validar token', error.message)
 			}
 

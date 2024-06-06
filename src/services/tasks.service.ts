@@ -1,19 +1,19 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateTask, UpdateTask } from '../interfaces/task.dto'
 import { TaskStatus } from '../helpers/enums'
-import { ErrorTM } from '../helpers/error.helper'
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class TasksService {
 	createTask = async (data: CreateTask) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: data.projectId } })
-			if (!project) throw new ErrorTM('El proyecto no existe')
+			if (!project) throw new ErrorMessage('El proyecto no existe')
 
 			const taskStatusId = (
 				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.OnProcess } })
 			).id
-			if (!taskStatusId) throw new ErrorTM('No se encontró el estado de la tarea')
+			if (!taskStatusId) throw new ErrorMessage('No se encontró el estado de la tarea')
 
 			const task = await prisma.task.create({
 				data: {
@@ -27,7 +27,7 @@ export class TasksService {
 
 			return task
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear la tarea', error.message)
 			}
 
@@ -38,11 +38,11 @@ export class TasksService {
 	updateTask = async (id: string, data: UpdateTask) => {
 		try {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })
-			if (!task) throw new ErrorTM('Tarea no encontrada')
+			if (!task) throw new ErrorMessage('Tarea no encontrada')
 
 			return prisma.task.update({ where: { id }, data: { ...data } })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al actualizar la tarea', error.message)
 			}
 
@@ -53,11 +53,11 @@ export class TasksService {
 	deleteTask = async (id: string) => {
 		try {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })
-			if (!task) throw new ErrorTM('Tarea no encontrada')
+			if (!task) throw new ErrorMessage('Tarea no encontrada')
 
 			return prisma.task.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al eliminar la tarea', error.message)
 			}
 

@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateProject } from '../interfaces/project.dto'
 import { Role } from '../helpers/enums'
-import { ErrorTM } from '../helpers/error.helper'
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class ProjectsService {
@@ -20,7 +20,7 @@ export class ProjectsService {
 	getProjectsByUser = async (userId: string) => {
 		try {
 			const userExists = await prisma.user.findUnique({ where: { id: userId } })
-			if (!userExists) throw new ErrorTM('El usuario no existe')
+			if (!userExists) throw new ErrorMessage('El usuario no existe')
 
 			const projects = await prisma.project.findMany({
 				where: { status: true, collaborators: { some: { userId } } },
@@ -28,7 +28,7 @@ export class ProjectsService {
 			})
 			return projects
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al obtener los proyectos', error.message)
 			}
 
@@ -42,7 +42,7 @@ export class ProjectsService {
 				where: { id: data.userId },
 			})
 
-			if (!user) throw new ErrorTM('El usuario no existe')
+			if (!user) throw new ErrorMessage('El usuario no existe')
 
 			const project = await prisma.project.create({
 				data: {
@@ -62,7 +62,7 @@ export class ProjectsService {
 
 			return { project, collaborator }
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear el proyecto', error.message)
 			}
 
@@ -73,18 +73,18 @@ export class ProjectsService {
 	addCollaborator = async (projectId: string, userId: string) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: projectId } })
-			if (!project) throw new ErrorTM('El proyecto no existe')
+			if (!project) throw new ErrorMessage('El proyecto no existe')
 
 			const user = await prisma.user.findUnique({ where: { id: userId } })
-			if (!user) throw new ErrorTM('El usuario no existe')
+			if (!user) throw new ErrorMessage('El usuario no existe')
 
 			const collaboratorExists = await prisma.collaborator.findFirst({
 				where: { projectId, userId },
 			})
-			if (collaboratorExists) throw new ErrorTM('El colaborador ya existe')
+			if (collaboratorExists) throw new ErrorMessage('El colaborador ya existe')
 
 			const roleId = (await prisma.role.findFirst({ where: { description: Role.Collaborator } })).id
-			if (!roleId) throw new ErrorTM('El rol del colaborador no existe')
+			if (!roleId) throw new ErrorMessage('El rol del colaborador no existe')
 			const collaborator = await prisma.collaborator.create({
 				data: {
 					roleId,
@@ -94,7 +94,7 @@ export class ProjectsService {
 			})
 			return collaborator
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al agregar al colaborador', error.message)
 			}
 
