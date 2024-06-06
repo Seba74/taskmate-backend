@@ -27,12 +27,14 @@ export const createProject = async (req: any, res: Response) => {
 	try {
 		const { title, description } = req.body
 		const user = req.user
-		const image = req.file
+		let image = ''
+		if(!req.file) image = '0d1dc1a6338f.png'
+		else image = req.file.filename
 
 		const data = await projectsService.createProject({
 			title,
 			description,
-			project_picture: image.filename,
+			project_picture: image,
 			userId: user.id
 		})
 		handleSuccess(res, data)

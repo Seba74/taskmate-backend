@@ -7,15 +7,17 @@ const storage = multer.diskStorage({
 		cb(null, './public/images')
 	},
 	filename: function (req, file, cb) {
-        const ext = path.extname(file.originalname)
-        if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
-            return cb(new Error('Solo se permiten imagenes'), '')
-        }
-        const name = uuid().split('-').splice(0, 2).join('')
+		const ext = path.extname(file.originalname)
+		if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
+			return cb(new Error('Solo se permiten imagenes'), '')
+		}
+		const name = uuid().split('-').splice(0, 2).join('')
 		cb(null, name + ext)
 	},
 })
 
-const upload = multer({storage})
+const upload = multer({
+	storage: storage,
+})
 
 export default upload

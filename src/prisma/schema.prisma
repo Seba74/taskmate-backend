@@ -24,7 +24,7 @@ model Project {
   id              String         @id @default(cuid())
   name            String
   description     String
-  project_picture String         @default("https://ionicframework.com/docs/img/demos/card-media.png")
+  project_picture String         @default("0d1dc1a6338f.png")
   status          Boolean        @default(true)
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
