@@ -8,7 +8,11 @@ export class RolesService {
 		try {
 			return prisma.role.findMany({ where: { status: true } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar cargar los roles', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener los roles', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener los roles', 'No se pudo obtener los roles')
 		}
 	}
 
@@ -16,18 +20,24 @@ export class RolesService {
 		try {
 			return prisma.role.findUnique({ where: { id, status: true } })
 		} catch (error) {
-			throw new ErrorTM('Error al obtener el rol', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener el rol', error.message)
+			}
+			throw new ErrorTM('Error al obtener el rol', 'No se pudo obtener el rol')
 		}
 	}
 
 	createRole = async (data: CreateRole) => {
 		try {
 			const role = await prisma.role.findFirst({ where: { description: data.description } })
-			if (role) throw new Error('El Rol ya existe')
+			if (role) throw new ErrorTM('El Rol ya existe')
 
 			return prisma.role.create({ data })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar crear el rol', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al crear el rol', error.message)
+			}
+			throw new ErrorTM('Error al crear el rol', 'No se pudo crear el rol')
 		}
 	}
 
@@ -35,7 +45,11 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar modificar el rol', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al intentar modificar el role', error.message)
+			}
+
+			throw new ErrorTM('Error al intentar modificar el role', 'No se pudo modificar el role')
 		}
 	}
 
@@ -43,7 +57,11 @@ export class RolesService {
 		try {
 			return prisma.role.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar eliminar el role', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al eliminar el rol', error.message)
+			}
+
+			throw new ErrorTM('Error al eliminar el rol', 'No se pudo eliminar el rol')
 		}
 	}
 }

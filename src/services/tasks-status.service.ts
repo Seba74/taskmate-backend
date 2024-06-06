@@ -8,7 +8,14 @@ export class TasksStatusService {
 		try {
 			return prisma.taskStatus.findMany({ where: { status: true } })
 		} catch (error) {
-			throw new ErrorTM('Error al obtener los estado de las tareas', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener los estados de las tareas', error.message)
+			}
+
+			throw new ErrorTM(
+				'Error al obtener los estados de las tareas',
+				'No se pudo obtener los estados de las tareas',
+			)
 		}
 	}
 
@@ -16,7 +23,13 @@ export class TasksStatusService {
 		try {
 			return prisma.taskStatus.findUnique({ where: { id, status: true } })
 		} catch (error) {
-			throw new ErrorTM('Error al obtener el estado de la tarea', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener el estado de la tarea', error.message)
+			}
+			throw new ErrorTM(
+				'Error al obtener el estado de la tarea',
+				'No se pudo obtener el estado de la tarea',
+			)
 		}
 	}
 
@@ -25,33 +38,45 @@ export class TasksStatusService {
 			const taskStatus = await prisma.taskStatus.findFirst({
 				where: { description: data.description },
 			})
-			if (taskStatus) throw new Error('Ya existe un elemento con esta descripción')
+			if (taskStatus) throw new ErrorTM('Ya existe un elemento con esta descripción')
 
 			return prisma.taskStatus.create({ data })
 		} catch (error) {
-			throw new ErrorTM('Error al crear un nuevo estado', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al crear el estado', error.message)
+			}
+
+			throw new ErrorTM('Error al crear el estado', 'No se pudo crear el estado')
 		}
 	}
 
 	updateTaskStatus = async (id: string, data: CreateTaskStatus) => {
 		try {
 			const taskStatus = await prisma.taskStatus.findUnique({ where: { id, status: true } })
-			if (!taskStatus) throw new Error('No se encontró el estado de la tarea')
+			if (!taskStatus) throw new ErrorTM('No se encontró el estado de la tarea')
 
 			return prisma.taskStatus.update({ where: { id }, data: { description: data.description } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar modificar el estado', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al modificar el estado', error.message)
+			}
+
+			throw new ErrorTM('Error al modificar el estado', 'No se pudo modificar el estado')
 		}
 	}
 
 	deleteTaskStatus = async (id: string) => {
 		try {
 			const taskStatus = await prisma.taskStatus.findUnique({ where: { id, status: true } })
-			if (!taskStatus) throw new Error('No se encontró el estado de la tarea')
+			if (!taskStatus) throw new ErrorTM('No se encontró el estado de la tarea')
 
 			return prisma.taskStatus.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			throw new ErrorTM('Error al eliminar un estado', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al eliminar el estado', error.message)
+			}
+
+			throw new ErrorTM('Error al eliminar el estado', 'No se pudo eliminar el estado')
 		}
 	}
 }

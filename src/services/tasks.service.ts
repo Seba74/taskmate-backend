@@ -8,7 +8,12 @@ export class TasksService {
 	createTask = async (data: CreateTask) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: data.projectId } })
-			if (!project) throw new Error('El proyecto no existe')
+			if (!project) throw new ErrorTM('El proyecto no existe')
+
+			const taskStatusId = (
+				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.OnProcess } })
+			).id
+			if (!taskStatusId) throw new ErrorTM('No se encontró el estado de la tarea')
 
 			const task = await prisma.task.create({
 				data: {
@@ -16,37 +21,47 @@ export class TasksService {
 					start_date: data.start_date,
 					end_date: data.end_date,
 					projectId: project.id,
-					taskStatusId: (
-						await prisma.taskStatus.findFirst({ where: { description: TaskStatus.OnProcess } })
-					).id,
+					taskStatusId: taskStatusId,
 				},
 			})
 
 			return task
 		} catch (error) {
-			throw new ErrorTM('Error al intentar crear la tarea', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al crear la tarea', error.message)
+			}
+
+			throw new ErrorTM('Error al crear la tarea', 'No se pudo crear la tarea')
 		}
 	}
 
 	updateTask = async (id: string, data: UpdateTask) => {
 		try {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })
-			if (!task) throw new Error('Tarea no encontrada')
+			if (!task) throw new ErrorTM('Tarea no encontrada')
 
 			return prisma.task.update({ where: { id }, data: { ...data } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar modificar la tarea', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al actualizar la tarea', error.message)
+			}
+
+			throw new ErrorTM('Error al actualizar la tarea', 'No se pudo actualizar la tarea')
 		}
 	}
 
 	deleteTask = async (id: string) => {
 		try {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })
-			if (!task) throw new Error('Tarea no encontrada')
+			if (!task) throw new ErrorTM('Tarea no encontrada')
 
 			return prisma.task.update({ where: { id }, data: { status: false } })
 		} catch (error) {
-			return { name: 'Error al elminar la tarea', message: error.message }
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al eliminar la tarea', error.message)
+			}
+
+			throw new ErrorTM('Error al eliminar la tarea', 'No se pudo eliminar la tarea')
 		}
 	}
 
@@ -57,7 +72,11 @@ export class TasksService {
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
 		} catch (error) {
-			return { name: 'Error al obtener las tareas', message: error.message }
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener las tareas', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener las tareas', 'No se pudo obtener las tareas')
 		}
 	}
 
@@ -68,7 +87,11 @@ export class TasksService {
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
 		} catch (error) {
-			return { name: 'Error al obtener el estado de las tareas', message: error.message }
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener las tareas', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener las tareas', 'No se pudo obtener las tareas')
 		}
 	}
 
@@ -85,7 +108,11 @@ export class TasksService {
 			const tasks = collaboratorOnTask.map((cot) => cot.task)
 			return tasks
 		} catch (error) {
-			return { name: 'Error al obtener tareas', message: error.message }
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al obtener las tareas', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener las tareas', 'No se pudo obtener las tareas')
 		}
 	}
 }

@@ -11,11 +11,11 @@ export class AuthService {
 		try {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
-			if (!user) throw new Error('Usuario o contraseña incorrectos')
+			if (!user) throw new ErrorTM('Usuario o contraseña incorrectos')
 			const match = await bcrypt.compare(authData.password, user.password)
 
 			if (!match) {
-				throw new Error('Usuario o contraseña incorrectos')
+				throw new ErrorTM('Usuario o contraseña incorrectos')
 			}
 
 			const payload: Payload = {
@@ -36,7 +36,14 @@ export class AuthService {
 				},
 			}
 		} catch (error) {
-			throw new ErrorTM('Error al iniciar sesión', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al iniciar sesión', error.message)
+			}
+
+			throw new ErrorTM(
+				'Error al iniciar sesión',
+				'No fue posible iniciar sesión, intente nuevamente.',
+			)
 		}
 	}
 
@@ -44,7 +51,7 @@ export class AuthService {
 		try {
 			const user = await prisma.user.findUnique({ where: { email: authData.email } })
 
-			if (user) throw new Error('El correo ya está registrado')
+			if (user) throw new ErrorTM('El correo ya está registrado')
 			const password = await bcrypt.hash(authData.password, 10)
 
 			const newUser = await prisma.user.create({
@@ -74,7 +81,14 @@ export class AuthService {
 				},
 			}
 		} catch (error) {
-			throw new ErrorTM('Error al intentar Registrar', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al intentar Registrar', error.message)
+			}
+
+			throw new ErrorTM(
+				'Error al intentar Registrar',
+				'No fue posible registrar el usuario, intente nuevamente.',
+			)
 		}
 	}
 
@@ -86,7 +100,14 @@ export class AuthService {
 			const newToken = generateAccessToken(data as Payload)
 			return { token: newToken, user }
 		} catch (error) {
-			throw new ErrorTM('Error al mantener la sesión', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('Error al validar token', error.message)
+			}
+
+			throw new ErrorTM(
+				'Error al validar token',
+				'No fue posible validar el token, intente nuevamente.',
+			)
 		}
 	}
 }

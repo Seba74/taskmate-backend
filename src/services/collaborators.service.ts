@@ -8,7 +8,14 @@ export class CollaboratorsService {
 		try {
 			return prisma.collaborator.findMany({ where: { status: true } })
 		} catch (error) {
-			throw new ErrorTM('Collaborators Error', error.message)
+			if (error instanceof ErrorTM) {
+				throw new ErrorTM('ErrorTM al obtener los colaboradores', error.message)
+			}
+
+			throw new ErrorTM(
+				'ErrorTM al obtener los colaboradores',
+				'No se pudo obtener los colaboradores',
+			)
 		}
 	}
 
@@ -18,13 +25,13 @@ export class CollaboratorsService {
 				where: { id: data.collaboratorId },
 			})
 
-			if (!collaborator) throw new Error('El colaborador no existe')
+			if (!collaborator) throw new ErrorTM('El colaborador no existe')
 
 			const task = await prisma.task.findUnique({
 				where: { id: data.taskId },
 			})
 
-			if (!task) throw new Error('La tarea no existe')
+			if (!task) throw new ErrorTM('La tarea no existe')
 
 			const collaboratorOnTask = await prisma.collaboratorsOnTasks.create({
 				data: {
@@ -35,7 +42,11 @@ export class CollaboratorsService {
 
 			return collaboratorOnTask
 		} catch (error) {
-			throw new ErrorTM('No se pudo asignar un colaborador', error.message)
+			if(error instanceof ErrorTM) {
+				throw new ErrorTM('ErrorTM al intentar asignar al colaborador', error.message)
+			}
+
+			throw new ErrorTM('ErrorTM al intentar asignar al colaborador', 'No se pudo asignar al colaborador')
 		}
 	}
 
@@ -45,11 +56,15 @@ export class CollaboratorsService {
 				where: { collaboratorId: data.collaboratorId, taskId: data.taskId },
 			})
 
-			if (!collaboratorOnTask) throw new Error('El colaborador no está asignado a la tarea')
+			if (!collaboratorOnTask) throw new ErrorTM('El colaborador no está asignado a la tarea')
 
 			return prisma.collaboratorsOnTasks.delete({ where: { id: collaboratorOnTask.id } })
 		} catch (error) {
-			throw new ErrorTM('Error al intentar eliminar al colaborador', error.message)
+			if(error instanceof ErrorTM) {
+				throw new ErrorTM('ErrorTM al intentar eliminar al colaborador', error.message)
+			}
+
+			throw new ErrorTM('ErrorTM al intentar eliminar al colaborador', 'No se pudo eliminar al colaborador')
 		}
 	}
 }
