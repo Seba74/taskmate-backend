@@ -78,6 +78,11 @@ export class ProjectsService {
 			const user = await prisma.user.findUnique({ where: { id: userId } })
 			if (!user) throw new ErrorTM('El usuario no existe')
 
+			const collaboratorExists = await prisma.collaborator.findFirst({
+				where: { projectId, userId },
+			})
+			if (collaboratorExists) throw new ErrorTM('El colaborador ya existe')
+
 			const roleId = (await prisma.role.findFirst({ where: { description: Role.Collaborator } })).id
 			if (!roleId) throw new ErrorTM('El rol del colaborador no existe')
 			const collaborator = await prisma.collaborator.create({
