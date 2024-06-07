@@ -33,7 +33,7 @@ export class UsersService {
 			const userExist = await prisma.user.findUnique({ where: { id, status: true } })
 			if (!userExist) throw new ErrorMessage('Usuario no encontrado')
 
-			return prisma.user.update({
+			const user = await prisma.user.update({
 				where: { id },
 				data: {
 					name: data.name,
@@ -42,6 +42,9 @@ export class UsersService {
 					email: data.email,
 				},
 			})
+
+			if (!user) throw new ErrorMessage('No se pudo actualizar el usuario')
+			return user
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al actualizar el usuario', error.message)

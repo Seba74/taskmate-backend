@@ -10,7 +10,7 @@ export const validate = (req: Request, res : Response, next: NextFunction) => {
 				response: {
 					data: null,
 					errors: errors.array().map((error: { path: string; msg: string })  => ({
-						name: 'Ocurrió un error',
+						name: 'Ups, ha ocurrido un error 😞',
 						message: error.msg,
 					})),
 				}

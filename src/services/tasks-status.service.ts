@@ -6,7 +6,10 @@ const prisma = new PrismaClient()
 export class TasksStatusService {
 	getTasksStatus = async () => {
 		try {
-			return prisma.taskStatus.findMany({ where: { status: true } })
+			const tasksStatus = await prisma.taskStatus.findMany({ where: { status: true } })
+			if (tasksStatus.length === 0) throw new ErrorMessage('No hay estados de tareas registrados')
+
+			return tasksStatus
 		} catch (error) {
 			if (error instanceof ErrorTM) {
 				throw new ErrorTM('Error al obtener los estados de las tareas', error.message)
@@ -21,7 +24,10 @@ export class TasksStatusService {
 
 	getTaskStatus = async (id: string) => {
 		try {
-			return prisma.taskStatus.findUnique({ where: { id, status: true } })
+			const taskStatus = prisma.taskStatus.findUnique({ where: { id, status: true } })
+			if (!taskStatus) throw new ErrorMessage('No se encontró el estado de la tarea')
+
+			return taskStatus
 		} catch (error) {
 			if (error instanceof ErrorTM) {
 				throw new ErrorTM('Error al obtener el estado de la tarea', error.message)

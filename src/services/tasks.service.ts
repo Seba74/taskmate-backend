@@ -67,10 +67,12 @@ export class TasksService {
 
 	getTasksByProject = async (projectId: string) => {
 		try {
-			return prisma.task.findMany({
+			const tasks = await prisma.task.findMany({
 				where: { projectId, status: true },
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
+			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
+			return tasks
 		} catch (error) {
 			if (error instanceof ErrorTM) {
 				throw new ErrorTM('Error al obtener las tareas', error.message)
@@ -82,10 +84,14 @@ export class TasksService {
 
 	getTasksByStatusAndProject = async (taskStatusId: string, projectId: string) => {
 		try {
-			return prisma.task.findMany({
+			const tasks = await prisma.task.findMany({
 				where: { taskStatusId, projectId, status: true },
 				include: { collaboratorsOnTasks: true, taskResources: true },
 			})
+
+			if (tasks.length === 0) throw new ErrorMessage('No hay tareas en el proyecto')
+
+			return tasks
 		} catch (error) {
 			if (error instanceof ErrorTM) {
 				throw new ErrorTM('Error al obtener las tareas', error.message)
@@ -105,6 +111,9 @@ export class TasksService {
 					},
 				},
 			})
+
+			if (collaboratorOnTask.length === 0) throw new ErrorMessage('No hay tareas asignadas al colaborador')
+
 			const tasks = collaboratorOnTask.map((cot) => cot.task)
 			return tasks
 		} catch (error) {

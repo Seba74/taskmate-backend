@@ -7,7 +7,10 @@ const prisma = new PrismaClient()
 export class ProjectsService {
 	getProjects = async () => {
 		try {
-			return prisma.project.findMany({ where: { status: true } })
+			const projects = await prisma.project.findMany({ where: { status: true } })
+			if (projects.length === 0) throw new ErrorMessage('No hay proyectos')
+
+			return projects
 		} catch (error) {
 			if (error instanceof ErrorTM) {
 				throw new ErrorTM('Error al obtener los proyectos', error.message)
@@ -33,6 +36,26 @@ export class ProjectsService {
 			}
 
 			throw new ErrorTM('Error al obtener los proyectos', 'No se pudo obtener los proyectos')
+		}
+	}
+
+	getProjectById = async (projectId: string, userId: string) => {
+		try {
+			const project = await prisma.project.findUnique({ where: { id: projectId } })
+			if (!project) throw new ErrorMessage('El proyecto no existe')
+
+			const collaborator = await prisma.collaborator.findFirst({
+				where: { projectId, userId },
+			})
+			if (!collaborator) throw new ErrorMessage('El usuario no es colaborador del proyecto')
+
+			return project
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al obtener el proyecto', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener el proyecto', 'No se pudo obtener el proyecto')
 		}
 	}
 
@@ -99,6 +122,28 @@ export class ProjectsService {
 			}
 
 			throw new ErrorTM('Error al agregar al colaborador', 'No se pudo agregar al colaborador')
+		}
+	}
+
+	updateProject = async (projectId: string, data: CreateProject) => {
+		try {
+			const project = await prisma.project.update({
+				where: { id: projectId, collaborators: { some: { userId: data.userId } } },
+				data: {
+					name: data.title,
+					description: data.description,
+					project_picture: data.project_picture,
+				},
+			})
+			if (!project) throw new ErrorMessage('El proyecto no existe')
+
+			return project
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al actualizar el proyecto', error.message)
+			}
+
+			throw new ErrorTM('Error al actualizar el proyecto', 'No se pudo actualizar el proyecto')
 		}
 	}
 }

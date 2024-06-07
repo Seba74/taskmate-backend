@@ -6,9 +6,12 @@ const prisma = new PrismaClient()
 export class CollaboratorsService {
 	getCollaborators = async () => {
 		try {
-			return prisma.collaborator.findMany({ where: { status: true } })
+			const collaborator = await prisma.collaborator.findMany({ where: { status: true } })
+			if (!collaborator) throw new ErrorMessage('No hay colaboradores')
+
+			return collaborator
 		} catch (error) {
-			if (error instanceof ErrorTM) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al obtener los colaboradores', error.message)
 			}
 
@@ -42,11 +45,14 @@ export class CollaboratorsService {
 
 			return collaboratorOnTask
 		} catch (error) {
-			if(error instanceof ErrorMessage) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al intentar asignar al colaborador', error.message)
 			}
 
-			throw new ErrorTM('Error al intentar asignar al colaborador', 'No se pudo asignar al colaborador')
+			throw new ErrorTM(
+				'Error al intentar asignar al colaborador',
+				'No se pudo asignar al colaborador',
+			)
 		}
 	}
 
@@ -60,11 +66,14 @@ export class CollaboratorsService {
 
 			return prisma.collaboratorsOnTasks.delete({ where: { id: collaboratorOnTask.id } })
 		} catch (error) {
-			if(error instanceof ErrorMessage) {
+			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al intentar eliminar al colaborador', error.message)
 			}
 
-			throw new ErrorTM('Error al intentar eliminar al colaborador', 'No se pudo eliminar al colaborador')
+			throw new ErrorTM(
+				'Error al intentar eliminar al colaborador',
+				'No se pudo eliminar al colaborador',
+			)
 		}
 	}
 }
