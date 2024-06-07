@@ -93,10 +93,18 @@ export class ProjectsService {
 		}
 	}
 
-	addCollaborator = async (projectId: string, userId: string) => {
+	addCollaborator = async (projectId: string, userId: string, currentUserId: string) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: projectId } })
 			if (!project) throw new ErrorMessage('El proyecto no existe')
+
+			const adminRoleId = (await prisma.role.findFirst({ where: { description: Role.Admin } })).id
+
+			const collaboratorAdmin = await prisma.collaborator.findFirst({
+				where: { projectId, userId: currentUserId, roleId: adminRoleId },
+			})
+			if (!collaboratorAdmin)
+				throw new ErrorMessage('No tienes permisos para agregar colaboradores')
 
 			const user = await prisma.user.findUnique({ where: { id: userId } })
 			if (!user) throw new ErrorMessage('El usuario no existe')
@@ -127,23 +135,59 @@ export class ProjectsService {
 
 	updateProject = async (projectId: string, data: CreateProject) => {
 		try {
-			const project = await prisma.project.update({
-				where: { id: projectId, collaborators: { some: { userId: data.userId } } },
+			const project = await prisma.project.findUnique({ where: { id: projectId } })
+			if (!project) throw new ErrorMessage('El proyecto no existe')
+
+			const roleId = (await prisma.role.findFirst({ where: { description: Role.Admin } })).id
+			if (!roleId) throw new ErrorMessage('El rol del colaborador no existe')
+
+			const collaborator = await prisma.collaborator.findFirst({
+				where: { projectId, userId: data.userId, roleId },
+			})
+			if (!collaborator) throw new ErrorMessage('No tienes permisos para actualizar el proyecto')
+
+			const projectUpdated = await prisma.project.update({
+				where: { id: projectId },
 				data: {
 					name: data.title,
 					description: data.description,
 					project_picture: data.project_picture,
 				},
 			})
-			if (!project) throw new ErrorMessage('El proyecto no existe')
-
-			return project
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al actualizar el proyecto', error.message)
 			}
 
 			throw new ErrorTM('Error al actualizar el proyecto', 'No se pudo actualizar el proyecto')
+		}
+	}
+
+	deleteProject = async (projectId: string, userId: string) => {
+		try {
+			const project = await prisma.project.findUnique({ where: { id: projectId } })
+			if (!project) throw new ErrorMessage('El proyecto no existe')
+
+			const roleId = (await prisma.role.findFirst({ where: { description: Role.Admin } })).id
+			if (!roleId) throw new ErrorMessage('El rol del colaborador no existe')
+
+			const collaborator = await prisma.collaborator.findFirst({
+				where: { projectId, userId, roleId },
+			})
+			if (!collaborator) throw new ErrorMessage('No tienes permisos para eliminar el proyecto')
+
+			const projectDeleted = await prisma.project.update({
+				where: { id: projectId },
+				data: { status: false },
+			})
+
+			return projectDeleted
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al eliminar el proyecto', error.message)
+			}
+
+			throw new ErrorTM('Error al eliminar el proyecto', 'No se pudo eliminar el proyecto')
 		}
 	}
 }

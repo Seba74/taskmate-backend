@@ -1,9 +1,8 @@
-import { handleError, handleSuccess } from '../helpers/response.helper'
 import { Response, Request } from 'express'
+import { handleError, handleSuccess } from '../helpers/response.helper'
 import { ProjectsService } from '../services/projects.service'
 import { CreateProject } from '../interfaces/project.dto'
-import { removeImage } from '../libs/multer'
-import { getRandomFileName } from '../libs/multer'
+import { removeImage, getRandomFileName } from '../libs/multer'
 
 const projectsService = new ProjectsService()
 
@@ -61,11 +60,12 @@ export const createProject = async (req: any, res: Response) => {
 	}
 }
 
-export const addCollaborator = async (req: Request, res: Response) => {
+export const addCollaborator = async (req: Request | any, res: Response) => {
 	try {
 		const { projectId, userId } = req.body
+		const user = req.user
 
-		const data = await projectsService.addCollaborator(projectId, userId)
+		const data = await projectsService.addCollaborator(projectId, userId, user.id)
 		handleSuccess(res, data)
 	} catch (error) {
 		handleError(res, error)
@@ -94,6 +94,18 @@ export const updateProject = async (req: Request | any, res: Response) => {
 		}
 
 		const data = await projectsService.updateProject(id, project)
+		handleSuccess(res, data)
+	} catch (error) {
+		handleError(res, error)
+	}
+}
+
+export const deleteProject = async (req: Request | any, res: Response) => {
+	try {
+		const { id } = req.params
+		const user = req.user
+
+		const data = await projectsService.deleteProject(id, user.id)
 		handleSuccess(res, data)
 	} catch (error) {
 		handleError(res, error)

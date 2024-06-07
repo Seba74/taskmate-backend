@@ -4,7 +4,8 @@ export enum Role {
 }
 
 export enum TaskStatus {
+	Pending = 'Pendiente',
 	OnProcess = 'En Proceso',
-	Completed = 'Completada',
-	Rejected = 'Rechazada',
+	Finished = 'Finalizado',
+	Rejected = 'Rechazado',
 }
