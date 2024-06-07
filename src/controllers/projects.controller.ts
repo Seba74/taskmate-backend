@@ -3,6 +3,7 @@ import { Response, Request } from 'express'
 import { ProjectsService } from '../services/projects.service'
 import { CreateProject } from '../interfaces/project.dto'
 import { removeImage } from '../libs/multer'
+import { getRandomFileName } from '../libs/multer'
 
 const projectsService = new ProjectsService()
 
@@ -40,14 +41,18 @@ export const createProject = async (req: any, res: Response) => {
 	try {
 		const { title, description } = req.body
 		const user = req.user
-		let image = ''
-		if (!req.file) image = '0d1dc1a6338f.png'
-		else image = req.file.filename
+
+		let imageName = ''
+		if (!req.file) {
+			imageName = 'default_picture.webp'
+		} else {
+			imageName = await getRandomFileName(req)
+		}
 
 		const data = await projectsService.createProject({
 			title,
 			description,
-			project_picture: image,
+			project_picture: imageName,
 			userId: user.id,
 		})
 		handleSuccess(res, data)
@@ -74,18 +79,18 @@ export const updateProject = async (req: Request | any, res: Response) => {
 		const user = req.user
 
 		const currentProject = await projectsService.getProjectById(id, user.id)
-		let image = currentProject.project_picture
+		let imageName = currentProject.project_picture
 
 		if (req.file) {
 			removeImage(currentProject.project_picture)
-			image = req.file.filename
+			imageName = await getRandomFileName(req)
 		}
 
 		const project: CreateProject = {
 			title,
 			description,
 			userId: user.id,
-			project_picture: image,
+			project_picture: imageName,
 		}
 
 		const data = await projectsService.updateProject(id, project)
