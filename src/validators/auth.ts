@@ -4,7 +4,6 @@ import { validate } from '../helpers/validator.helper'
 
 export const loginValidator = [
 	check('email').isEmail().withMessage('El correo electrónico no es válido'),
-	check('password').isLength({ min: 6 }).withMessage('La contraseña debe tener al menos 6 caracteres'),
 	(req: Request, res: Response, next: NextFunction) => validate(req, res, next)
 ]
 

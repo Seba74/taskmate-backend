@@ -9,7 +9,7 @@ const router = Router()
 
 router.get('/', tokenAuthMiddleware, getProjectsByUser)
 router.get('/:id', tokenAuthMiddleware, getProjectById)
-router.put('/:id', tokenAuthMiddleware, upload.single('image'), projectValidator, updateProject)
+router.put('/:id', tokenAuthMiddleware, upload.single('image'), updateProject)
 router.post('/', tokenAuthMiddleware,  upload.single('image'), projectValidator, createProject)
 router.post('/add-collaborator', tokenAuthMiddleware, addCollaboratorValidator, addCollaborator)
 
