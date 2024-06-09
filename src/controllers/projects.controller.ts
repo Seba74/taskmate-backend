@@ -2,7 +2,7 @@ import { Response, Request } from 'express'
 import { handleError, handleSuccess } from '../helpers/response.helper'
 import { ProjectsService } from '../services/projects.service'
 import { CreateProject } from '../interfaces/project.dto'
-import { removeImage, getRandomFileName } from '../libs/multer'
+import { removeImage, convertToWebp } from '../libs/multer'
 
 const projectsService = new ProjectsService()
 
@@ -45,7 +45,7 @@ export const createProject = async (req: any, res: Response) => {
 		if (!req.file) {
 			imageName = 'default_picture.webp'
 		} else {
-			imageName = await getRandomFileName(req)
+			imageName = await convertToWebp(req)
 		}
 
 		const data = await projectsService.createProject({
@@ -83,7 +83,7 @@ export const updateProject = async (req: Request | any, res: Response) => {
 
 		if (req.file) {
 			removeImage(currentProject.project_picture)
-			imageName = await getRandomFileName(req)
+			imageName = await convertToWebp(req)
 		}
 
 		const project: CreateProject = {

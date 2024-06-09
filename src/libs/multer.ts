@@ -8,23 +8,29 @@ import { Request } from 'express'
 
 const storage = multer.memoryStorage()
 
-export const upload = multer({
+export const uploadProject = multer({
 	storage: storage,
 	limits: { fileSize: 2 * 1024 * 1024 },
 	fileFilter: (req, file, cb) => {
 		const ext = path.extname(file.originalname)
-		if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png') {
+		if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png' && ext !== '.webp') {
 			return cb(new ErrorTM('Error al cargar la imagen', 'Solo se permiten imágenes'))
 		}
 		cb(null, true)
 	},
 })
 
-export const convertToWebp = async (fileBuffer: Buffer, filename: string) => {
-	const outputFilename = filename + '.webp'
-	const outputPath = path.join(process.cwd(), 'public', 'images', outputFilename)
-	await sharp(fileBuffer).webp().toFile(outputPath)
-	return outputFilename
+export const uploadTask = multer({
+	storage: storage,
+	limits: { fileSize: 4 * 1024 * 1024 },
+})
+
+export const saveFile = (req: Request) => {
+	const ext = path.extname(req.file.originalname)
+	if (ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.webp') {
+		return convertToWebp(req.file.buffer, 'images')
+	}
+	return saveDocument(req.file.buffer, ext)
 }
 
 export const removeImage = (filename: string) => {
@@ -36,8 +42,24 @@ export const removeImage = (filename: string) => {
 	})
 }
 
-export const getRandomFileName = async (req: Request) => {
+const saveDocument = (fileBuffer: Buffer, ext: string) => {
 	const fileName = uuid().split('-').splice(0, 2).join('')
-	const webpFileName = await convertToWebp(req.file.buffer, fileName)
-	return webpFileName
+	const outputFilename = fileName + ext
+
+	const outputPath = path.join(process.cwd(), 'public', 'resources', 'documents', outputFilename)
+	fs.writeFileSync(outputPath, fileBuffer)
+	return outputFilename
+}
+
+export const convertToWebp = async (fileBuffer: Buffer, lock?: string) => {
+	const fileName = uuid().split('-').splice(0, 2).join('')
+	const outputFilename = fileName + '.webp'
+	let outputPath = ''
+	if (lock) {
+		outputPath = path.join(process.cwd(), 'public', 'resources', 'images', outputFilename)
+	} else {
+		outputPath = path.join(process.cwd(), 'public', 'images', outputFilename)
+	}
+	await sharp(fileBuffer).webp().toFile(outputPath)
+	return outputFilename
 }

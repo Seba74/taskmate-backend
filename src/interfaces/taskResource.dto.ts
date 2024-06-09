@@ -14,6 +14,7 @@ export interface TaskResource {
 }
 
 export interface CreateTaskResource {
-	taskResourceTypeId: string
+	resourceType: string
+	taskId: string
 	description: string
 }

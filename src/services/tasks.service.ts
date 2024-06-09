@@ -1,25 +1,33 @@
 import { PrismaClient } from '@prisma/client'
 import { CreateTask, UpdateTask } from '../interfaces/task.dto'
-import { TaskStatus } from '../helpers/enums'
+import { Role, TaskStatus } from '../helpers/enums'
 import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 const prisma = new PrismaClient()
 
 export class TasksService {
-	createTask = async (data: CreateTask) => {
+	createTask = async (data: CreateTask, userId: string) => {
 		try {
 			const project = await prisma.project.findUnique({ where: { id: data.projectId } })
 			if (!project) throw new ErrorMessage('El proyecto no existe')
 
+			const roleAdmin = await prisma.role.findFirst({ where: { description: Role.Admin } })
+			if (!roleAdmin) throw new ErrorMessage('No se encontró el rol de administrador')
+
+			const collaborator = await prisma.collaborator.findFirst({
+				where: { projectId: data.projectId, userId, roleId: roleAdmin.id },
+			})
+			if (!collaborator) throw new ErrorMessage('No tienes permisos para crear tareas en este proyecto')
+
 			const taskStatusId = (
-				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.OnProcess } })
+				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.Pending } })
 			).id
 			if (!taskStatusId) throw new ErrorMessage('No se encontró el estado de la tarea')
 
 			const task = await prisma.task.create({
 				data: {
 					description: data.description,
-					start_date: data.start_date,
-					end_date: data.end_date,
+					startDate: data.startDate,
+					endDate: data.endDate,
 					projectId: project.id,
 					taskStatusId: taskStatusId,
 				},
@@ -112,7 +120,8 @@ export class TasksService {
 				},
 			})
 
-			if (collaboratorOnTask.length === 0) throw new ErrorMessage('No hay tareas asignadas al colaborador')
+			if (collaboratorOnTask.length === 0)
+				throw new ErrorMessage('No hay tareas asignadas al colaborador')
 
 			const tasks = collaboratorOnTask.map((cot) => cot.task)
 			return tasks

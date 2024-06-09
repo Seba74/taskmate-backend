@@ -24,8 +24,8 @@ export interface Task {
 export interface CreateTask {
 	projectId: string
 	description: string
-	start_date: Date
-	end_date: Date
+	startDate: Date
+	endDate: Date
 }
 
 export interface UpdateTask {

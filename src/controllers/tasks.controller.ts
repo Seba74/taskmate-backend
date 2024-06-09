@@ -6,7 +6,7 @@ const tasksService = new TasksService()
 
 export const getTasksByProject = async (req: Request, res: Response) => {
 	try {
-        const { projectId } = req.params
+		const { projectId } = req.params
 		const tasks = await tasksService.getTasksByProject(projectId)
 		handleSuccess(res, tasks)
 	} catch (error) {
@@ -16,7 +16,7 @@ export const getTasksByProject = async (req: Request, res: Response) => {
 
 export const getTasksByStatusAndProject = async (req: Request, res: Response) => {
 	try {
-        const { taskStatusId, projectId } = req.body
+		const { taskStatusId, projectId } = req.body
 		const task = await tasksService.getTasksByStatusAndProject(taskStatusId, projectId)
 		handleSuccess(res, task)
 	} catch (error) {
@@ -25,23 +25,26 @@ export const getTasksByStatusAndProject = async (req: Request, res: Response) =>
 }
 
 export const getTasksByCollaborator = async (req: Request, res: Response) => {
-    try {
-        const { collaboratorId } = req.params
-        const task = await tasksService.getTasksByCollaborator(collaboratorId)
-        handleSuccess(res, task)
-    } catch (error) {
-        handleError(res, error)
-    }
+	try {
+		const { collaboratorId } = req.params
+		const task = await tasksService.getTasksByCollaborator(collaboratorId)
+		handleSuccess(res, task)
+	} catch (error) {
+		handleError(res, error)
+	}
 }
 
-export const createTask = async (req: Request, res: Response) => {
-    try {
-        const data = req.body
-        const task = await tasksService.createTask(data)
-        handleSuccess(res, task)
-    } catch (error) {
-        handleError(res, error)
-    }
+export const createTask = async (req: Request | any, res: Response) => {
+	try {
+		const { projectId } = req.params
+		const { description, startDate, endDate } = req.body
+		const userId = req.user.id
+		
+		const task = await tasksService.createTask({ projectId, description, startDate, endDate }, userId)
+		handleSuccess(res, task)
+	} catch (error) {
+		handleError(res, error)
+	}
 }
 
 export const deleteTask = async (req: Request, res: Response) => {
@@ -63,6 +66,4 @@ export const updateTask = async (req: Request, res: Response) => {
 	} catch (error) {
 		handleError(res, error)
 	}
-
-
 }
