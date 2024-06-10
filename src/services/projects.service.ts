@@ -69,7 +69,7 @@ export class ProjectsService {
 
 			const project = await prisma.project.create({
 				data: {
-					name: data.title,
+					title: data.title,
 					description: data.description,
 					project_picture: data.project_picture,
 				},
@@ -149,11 +149,13 @@ export class ProjectsService {
 			const projectUpdated = await prisma.project.update({
 				where: { id: projectId },
 				data: {
-					name: data.title,
+					title: data.title,
 					description: data.description,
 					project_picture: data.project_picture,
 				},
 			})
+
+			return projectUpdated
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al actualizar el proyecto', error.message)

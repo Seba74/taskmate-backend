@@ -62,7 +62,7 @@ export const convertToWebp = async (fileBuffer: Buffer, lock?: string) => {
 	}
 	
 	await sharp(fileBuffer).webp().toFile(outputPath).catch((err) => {
-		throw new ErrorTM('Error al convertir la imagen', 'No se ha podido convertir la imagen a webp')
+		throw new ErrorTM('Error al cargar la imagen', 'No se ha podido procesar la imagen')
 	})
 	return outputFilename
 }

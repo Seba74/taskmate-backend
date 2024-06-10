@@ -3,7 +3,7 @@ CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
-    "profile_picture" TEXT NOT NULL DEFAULT '',
+    "profile_picture" TEXT NOT NULL DEFAULT 'default_picture.webp',
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT true,
@@ -16,9 +16,9 @@ CREATE TABLE "User" (
 -- CreateTable
 CREATE TABLE "Project" (
     "id" TEXT NOT NULL,
-    "name" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "project_picture" TEXT NOT NULL DEFAULT 'https://ionicframework.com/docs/img/demos/card-media.png',
+    "project_picture" TEXT NOT NULL DEFAULT 'default_picture.webp',
     "status" BOOLEAN NOT NULL DEFAULT true,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -89,8 +89,8 @@ CREATE TABLE "TaskResource" (
 CREATE TABLE "Task" (
     "id" TEXT NOT NULL,
     "description" TEXT NOT NULL,
-    "start_date" TIMESTAMP(3) NOT NULL,
-    "end_date" TIMESTAMP(3) NOT NULL,
+    "startDate" TIMESTAMP(3) NOT NULL,
+    "endDate" TIMESTAMP(3) NOT NULL,
     "status" BOOLEAN NOT NULL DEFAULT true,
     "projectId" TEXT NOT NULL,
     "taskStatusId" TEXT NOT NULL,
@@ -130,6 +130,9 @@ CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Role_description_key" ON "Role"("description");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "TaskResourceType_description_key" ON "TaskResourceType"("description");
 
 -- AddForeignKey
 ALTER TABLE "Collaborator" ADD CONSTRAINT "Collaborator_projectId_fkey" FOREIGN KEY ("projectId") REFERENCES "Project"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
