@@ -45,7 +45,7 @@ export const createProject = async (req: any, res: Response) => {
 		if (!req.file) {
 			imageName = 'default_picture.webp'
 		} else {
-			imageName = await convertToWebp(req)
+			imageName = await convertToWebp(req.file.buffer)
 		}
 
 		const data = await projectsService.createProject({
