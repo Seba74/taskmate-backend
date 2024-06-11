@@ -27,7 +27,14 @@ export class ProjectsService {
 
 			const projects = await prisma.project.findMany({
 				where: { status: true, collaborators: { some: { userId } } },
-				include: { collaborators: true },
+				include: {
+					collaborators: {
+						select: {
+							role: { select: { description: true } },
+							user: { select: { name: true, last_name: true, profile_picture: true } },
+						},
+					},
+				},
 			})
 			return projects
 		} catch (error) {
