@@ -10,7 +10,7 @@ const storage = multer.memoryStorage()
 
 export const uploadProject = multer({
 	storage: storage,
-	limits: { fileSize: 2 * 1024 * 1024 },
+	limits: { fileSize: 6 * 1024 * 1024 },
 	fileFilter: (req, file, cb) => {
 		const ext = path.extname(file.originalname)
 		if (ext !== '.jpg' && ext !== '.jpeg' && ext !== '.png' && ext !== '.webp') {
