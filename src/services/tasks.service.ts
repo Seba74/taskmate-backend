@@ -77,7 +77,10 @@ export class TasksService {
 		try {
 			const task = await prisma.task.findUnique({
 				where: { id, status: true },
-				include: {
+				select: {
+					id: true,
+					endDate: true,
+					description: true,
 					collaboratorsOnTasks: {
 						include: {
 							collaborator: {
@@ -140,11 +143,15 @@ export class TasksService {
 		try {
 			const tasks = await prisma.task.findMany({
 				where: { projectId, status: true },
-				include: {
+				select: {
+					id: true,
+					endDate: true,
+					description: true,
 					collaboratorsOnTasks: {
-						include: {
+						select: {
 							collaborator: {
 								select: {
+									id: true,
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
@@ -157,64 +164,6 @@ export class TasksService {
 				},
 			})
 			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
-			return tasks
-		} catch (error) {
-			if (error instanceof ErrorTM) {
-				throw new ErrorTM('Error al obtener las tareas', error.message)
-			}
-
-			throw new ErrorTM('Error al obtener las tareas', 'No se pudo obtener las tareas')
-		}
-	}
-
-	getTasksByStatusAndProject = async (taskStatusId: string, projectId: string) => {
-		try {
-			const tasks = await prisma.task.findMany({
-				where: { taskStatusId, projectId, status: true },
-				include: { collaboratorsOnTasks: true, taskResources: true },
-			})
-
-			if (tasks.length === 0) throw new ErrorMessage('No hay tareas en el proyecto')
-
-			return tasks
-		} catch (error) {
-			if (error instanceof ErrorTM) {
-				throw new ErrorTM('Error al obtener las tareas', error.message)
-			}
-
-			throw new ErrorTM('Error al obtener las tareas', 'No se pudo obtener las tareas')
-		}
-	}
-
-	getTasksByCollaborator = async (collaboratorId: string) => {
-		try {
-			const collaboratorOnTask = await prisma.collaboratorsOnTasks.findMany({
-				where: { collaboratorId, status: true },
-				include: {
-					task: {
-						include: {
-							collaboratorsOnTasks: {
-								include: {
-									collaborator: {
-										select: {
-											id: true,
-											user: {
-												select: { name: true, last_name: true, profile_picture: true },
-											},
-										},
-									},
-								},
-							},
-							taskResources: { select: { id: true, description: true, path: true } },
-							taskStatus: { select: { description: true } },
-						},
-					},
-				},
-			})
-			if (collaboratorOnTask.length === 0)
-				throw new ErrorMessage('No hay tareas asignadas al colaborador')
-
-			const tasks = collaboratorOnTask.map((cot) => cot.task)
 			return tasks
 		} catch (error) {
 			if (error instanceof ErrorTM) {

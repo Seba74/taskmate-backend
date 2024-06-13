@@ -24,26 +24,6 @@ export const getTaskById = async (req: Request, res: Response) => {
 	}
 }
 
-export const getTasksByStatusAndProject = async (req: Request, res: Response) => {
-	try {
-		const { taskStatusId, projectId } = req.body
-		const task = await tasksService.getTasksByStatusAndProject(taskStatusId, projectId)
-		handleSuccess(res, task)
-	} catch (error) {
-		handleError(res, error)
-	}
-}
-
-export const getTasksByCollaborator = async (req: Request, res: Response) => {
-	try {
-		const { collaboratorId } = req.params
-		const task = await tasksService.getTasksByCollaborator(collaboratorId)
-		handleSuccess(res, task)
-	} catch (error) {
-		handleError(res, error)
-	}
-}
-
 export const createTask = async (req: Request | any, res: Response) => {
 	try {
 		const { projectId } = req.params

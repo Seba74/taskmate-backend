@@ -1,8 +1,6 @@
 import { Router } from 'express'
 import {
 	getTasksByProject,
-	getTasksByStatusAndProject,
-	getTasksByCollaborator,
 	createTask,
 	deleteTask,
 	updateTask,
@@ -19,8 +17,6 @@ router.post('/:projectId', tokenAuthMiddleware, createTaskValidator, createTask)
 router.post('/:id/collaborator/:collaboratorId', tokenAuthMiddleware, addCollaboratorToTask)
 router.get('/project/:projectId', tokenAuthMiddleware, getTasksByProject)
 router.get('/:id', tokenAuthMiddleware, getTaskById)
-router.get('/project/status', tokenAuthMiddleware, getTasksByStatusAndProject)
-router.get('/collaborator/:collaboratorId', tokenAuthMiddleware, getTasksByCollaborator)
 router.put('/:id', tokenAuthMiddleware, updateTask)
 router.delete('/:id', tokenAuthMiddleware, deleteTask)
 
