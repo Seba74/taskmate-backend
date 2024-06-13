@@ -37,7 +37,7 @@ export const getTasksByCollaborator = async (req: Request, res: Response) => {
 export const createTask = async (req: Request | any, res: Response) => {
 	try {
 		const { projectId } = req.params
-		const { description, startDate, endDate } = req.body
+		const { description, endDate } = req.body
 		const userId = req.user.id
 		
 		const task = await tasksService.createTask({ projectId, description, endDate }, userId)
