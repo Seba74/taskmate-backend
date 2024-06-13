@@ -21,3 +21,8 @@ export interface CreateTaskResource {
 	path: string
 	description: string
 }
+
+export interface UpdateTaskResource {
+	description: string,
+	path: string,
+}

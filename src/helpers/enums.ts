@@ -9,3 +9,8 @@ export enum TaskStatus {
 	Finished = 'Finalizado',
 	Rejected = 'Rechazado',
 }
+
+export enum ResourceType {
+	Image = 'image',
+	Document = 'document',
+}

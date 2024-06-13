@@ -57,14 +57,3 @@ export const deleteTaskResource = async (req: Request, res: Response) => {
 		handleError(res, error)
 	}
 }
-
-export const updateTaskResource = async (req: Request, res: Response) => {
-	try {
-		const { id } = req.params
-		const data = req.body
-		const taskResource = await taskResourcesTypeService.updateTaskResource(id, data)
-		handleSuccess(res, taskResource)
-	} catch (error) {
-		handleError(res, error)
-	}
-}

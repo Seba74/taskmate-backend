@@ -24,7 +24,10 @@ export class TaskResourcesService {
 
 	getTaskResource = async (id: string) => {
 		try {
-			const taskResource = prisma.taskResource.findUnique({ where: { id, status: true } })
+			const taskResource = prisma.taskResource.findUnique({
+				where: { id, status: true },
+				include: { taskResourceType: { select: { description: true } } },
+			})
 			if (!taskResource) throw new ErrorMessage('No se encontró el recurso de la tarea')
 
 			return taskResource
@@ -70,27 +73,7 @@ export class TaskResourcesService {
 			throw new ErrorTM('Error al crear el recurso', 'No se pudo crear el recurso')
 		}
 	}
-
-	updateTaskResource = async (id: string, data: CreateTaskResource) => {
-		try {
-			const taskResource = await prisma.taskResource.findUnique({
-				where: { id, status: true },
-			})
-			if (!taskResource) throw new ErrorMessage('No se encontró el recurso de la tarea')
-
-			return prisma.taskResource.update({
-				where: { id },
-				data: { description: data.description },
-			})
-		} catch (error) {
-			if (error instanceof ErrorMessage) {
-				throw new ErrorTM('Error al modificar el recurso', error.message)
-			}
-
-			throw new ErrorTM('Error al modificar el recurso', 'No se pudo modificar el recurso')
-		}
-	}
-
+	
 	deleteTaskResource = async (id: string) => {
 		try {
 			const taskResource = await prisma.taskResource.findUnique({
