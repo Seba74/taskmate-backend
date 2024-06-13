@@ -40,7 +40,7 @@ export const createTask = async (req: Request | any, res: Response) => {
 		const { description, startDate, endDate } = req.body
 		const userId = req.user.id
 		
-		const task = await tasksService.createTask({ projectId, description, startDate, endDate }, userId)
+		const task = await tasksService.createTask({ projectId, description, endDate }, userId)
 		handleSuccess(res, task)
 	} catch (error) {
 		handleError(res, error)
