@@ -10,12 +10,12 @@ import {
 } from '../controllers/tasks.controller'
 import { tokenAuthMiddleware } from '../middlewares/validateToken'
 import { createTaskValidator } from '../validators/tasks'
-import { addTaskCollaboratorValidator } from '../validators/collaborators'
+import { collaboratorValidator } from '../validators/collaborators'
 
 const router = Router()
 
 router.post('/:projectId', tokenAuthMiddleware, createTaskValidator, createTask)
-router.post('/add-collaborator', tokenAuthMiddleware, addTaskCollaboratorValidator, createTask)
+router.post('/add-collaborator', tokenAuthMiddleware, collaboratorValidator, createTask)
 router.get('/project/:projectId', tokenAuthMiddleware, getTasksByProject)
 router.get('/:id', tokenAuthMiddleware, getTaskById)
 router.get('/project/status', tokenAuthMiddleware, getTasksByStatusAndProject)

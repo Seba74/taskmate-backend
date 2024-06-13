@@ -82,6 +82,7 @@ export class TasksService {
 						include: {
 							collaborator: {
 								select: {
+									id: true,
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
@@ -196,6 +197,7 @@ export class TasksService {
 								include: {
 									collaborator: {
 										select: {
+											id: true,
 											user: {
 												select: { name: true, last_name: true, profile_picture: true },
 											},
