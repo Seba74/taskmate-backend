@@ -11,7 +11,6 @@ export interface Task {
 	taskStatus: TaskStatus
 	taskStatusId: string
 	description: string
-	start_date: Date
 	end_date: Date
 	status: boolean
 	createdAt: Date
@@ -24,12 +23,10 @@ export interface Task {
 export interface CreateTask {
 	projectId: string
 	description: string
-	startDate: Date
 	endDate: Date
 }
 
 export interface UpdateTask {
 	description: string
-	start_date: Date
 	end_date: Date
 }

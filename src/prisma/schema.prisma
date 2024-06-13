@@ -92,7 +92,6 @@ model Task {
   project              Project                @relation(fields: [projectId], references: [id])
   taskStatus           TaskStatus             @relation(fields: [taskStatusId], references: [id])
   description          String
-  startDate            DateTime
   endDate              DateTime
   status               Boolean                @default(true)
   projectId            String

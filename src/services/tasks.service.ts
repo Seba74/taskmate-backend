@@ -27,7 +27,6 @@ export class TasksService {
 			const task = await prisma.task.create({
 				data: {
 					description: data.description,
-					startDate: data.startDate,
 					endDate: data.endDate,
 					projectId: project.id,
 					taskStatusId: taskStatusId,
@@ -91,7 +90,7 @@ export class TasksService {
 						},
 					},
 					taskResources: true,
-					taskStatus: { select: { description: true } },
+					taskStatus: true,
 				},
 			})
 			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
