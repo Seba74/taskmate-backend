@@ -2,6 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import { CreateTask, UpdateTask } from '../interfaces/task.dto'
 import { Role, TaskStatus } from '../helpers/enums'
 import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
+import { addCollaborator } from '../controllers/projects.controller'
 const prisma = new PrismaClient()
 
 export class TasksService {
@@ -40,6 +41,35 @@ export class TasksService {
 			}
 
 			throw new ErrorTM('Error al crear la tarea', 'No se pudo crear la tarea')
+		}
+	}
+
+	addCollaboratorToTask = async (taskId: string, collaboratorId: string) => {
+		try {
+			const task = await prisma.task.findUnique({ where: { id: taskId, status: true } })
+			if (!task) throw new ErrorMessage('Tarea no encontrada')
+
+			const project = await prisma.project.findUnique({ where: { id: task.projectId } })
+
+			const collaborator = await prisma.collaborator.findUnique({
+				where: { id: collaboratorId, projectId: project.id },
+			})
+			if (!collaborator) throw new ErrorMessage('Colaborador no encontrado')
+
+			const cot = await prisma.collaboratorsOnTasks.create({
+				data: { taskId, collaboratorId },
+			})
+
+			return cot
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al agregar el colaborador a la tarea', error.message)
+			}
+
+			throw new ErrorTM(
+				'Error al agregar el colaborador a la tarea',
+				'No se pudo agregar el colaborador a la tarea',
+			)
 		}
 	}
 

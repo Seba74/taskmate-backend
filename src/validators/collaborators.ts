@@ -13,3 +13,9 @@ export const addCollaboratorValidator = [
 	check('userId').exists().withMessage('Se requiere un ID de usuario'),
 	(req: Request, res: Response, next: NextFunction) => validate(req, res, next),
 ]
+
+export const addTaskCollaboratorValidator = [
+	check('taskId').exists().withMessage('Se requiere un ID de tarea'),
+	check('collaboratorId').exists().withMessage('Se requiere un ID de colaborador'),
+	(req: Request, res: Response, next: NextFunction) => validate(req, res, next),
+]
