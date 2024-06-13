@@ -54,6 +54,7 @@ export class TaskResourcesService {
 			const createTaskResource = {
 				description: data.description,
 				taskId: data.taskId,
+				path: data.path,
 				taskResourceTypeId: taskResourceType.id,
 			}
 

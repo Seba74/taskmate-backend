@@ -1,5 +1,6 @@
 import { Task } from './task.dto'
 import { TaskResourceType } from './taskResourceType.dto'
+import path from 'path';
 
 export interface TaskResource {
 	id: string
@@ -7,6 +8,7 @@ export interface TaskResource {
 	task: Task
 	taskResourceTypeId: string
 	taskId: string
+	path: string
 	description: string
 	status: boolean
 	createdAt: Date
@@ -16,5 +18,6 @@ export interface TaskResource {
 export interface CreateTaskResource {
 	resourceType: string
 	taskId: string
+	path: string
 	description: string
 }

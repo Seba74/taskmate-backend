@@ -31,15 +31,16 @@ export const createTaskResource = async (req: Request, res: Response) => {
 		const { taskId } = req.params
 		const file = req.file
 		if (!file) throw new ErrorTM('Error al subir el archivo', 'No se ha encontrado ningún archivo')
-
+		const originalname = file.originalname
 		const outputFilename = await saveFile(req)
 		const ext = path.extname(outputFilename)
 		const resourceType = ext === '.webp' ? 'image' : 'document'
 
 		const taskResource = await taskResourcesTypeService.createTaskResource({
-			description: outputFilename,
+			description: originalname,
+			path: outputFilename,
 			taskId,
-			resourceType
+			resourceType,
 		})
 		handleSuccess(res, taskResource)
 	} catch (error) {

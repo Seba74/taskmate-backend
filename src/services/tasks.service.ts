@@ -16,7 +16,8 @@ export class TasksService {
 			const collaborator = await prisma.collaborator.findFirst({
 				where: { projectId: data.projectId, userId, roleId: roleAdmin.id },
 			})
-			if (!collaborator) throw new ErrorMessage('No tienes permisos para crear tareas en este proyecto')
+			if (!collaborator)
+				throw new ErrorMessage('No tienes permisos para crear tareas en este proyecto')
 
 			const taskStatusId = (
 				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.Pending } })
@@ -77,7 +78,21 @@ export class TasksService {
 		try {
 			const tasks = await prisma.task.findMany({
 				where: { projectId, status: true },
-				include: { collaboratorsOnTasks: true, taskResources: true },
+				include: {
+					collaboratorsOnTasks: {
+						include: {
+							collaborator: {
+								select: {
+									user: {
+										select: { name: true, last_name: true, profile_picture: true },
+									},
+								},
+							},
+						},
+					},
+					taskResources: true,
+					taskStatus: { select: { description: true } },
+				},
 			})
 			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
 			return tasks
@@ -115,11 +130,24 @@ export class TasksService {
 				where: { collaboratorId, status: true },
 				include: {
 					task: {
-						include: { collaboratorsOnTasks: true, taskResources: true },
+						include: {
+							collaboratorsOnTasks: {
+								include: {
+									collaborator: {
+										select: {
+											user: {
+												select: { name: true, last_name: true, profile_picture: true },
+											},
+										},
+									},
+								},
+							},
+							taskResources: true,
+							taskStatus: { select: { description: true } },
+						},
 					},
 				},
 			})
-
 			if (collaboratorOnTask.length === 0)
 				throw new ErrorMessage('No hay tareas asignadas al colaborador')
 

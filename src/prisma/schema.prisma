@@ -81,6 +81,7 @@ model TaskResource {
   taskResourceTypeId String
   taskId             String
   description        String
+  path               String           @unique
   status             Boolean          @default(true)
   createdAt          DateTime         @default(now())
   updatedAt          DateTime         @updatedAt
@@ -91,8 +92,8 @@ model Task {
   project              Project                @relation(fields: [projectId], references: [id])
   taskStatus           TaskStatus             @relation(fields: [taskStatusId], references: [id])
   description          String
-  startDate           DateTime
-  endDate             DateTime
+  startDate            DateTime
+  endDate              DateTime
   status               Boolean                @default(true)
   projectId            String
   taskStatusId         String
