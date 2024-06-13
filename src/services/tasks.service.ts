@@ -43,6 +43,38 @@ export class TasksService {
 		}
 	}
 
+	getTaskById = async (id: string) => {
+		try {
+			const task = await prisma.task.findUnique({
+				where: { id, status: true },
+				include: {
+					collaboratorsOnTasks: {
+						include: {
+							collaborator: {
+								select: {
+									user: {
+										select: { name: true, last_name: true, profile_picture: true },
+									},
+								},
+							},
+						},
+					},
+					taskResources: { select: { id: true, description: true, path: true } },
+					taskStatus: { select: { description: true } },
+				},
+			})
+			if (!task) throw new ErrorMessage('Tarea no encontrada')
+
+			return task
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al obtener la tarea', error.message)
+			}
+
+			throw new ErrorTM('Error al obtener la tarea', 'No se pudo obtener la tarea')
+		}
+	}
+
 	updateTask = async (id: string, data: UpdateTask) => {
 		try {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })

@@ -14,6 +14,16 @@ export const getTasksByProject = async (req: Request, res: Response) => {
 	}
 }
 
+export const getTaskById = async (req: Request, res: Response) => {
+	try {
+		const { id } = req.params
+		const task = await tasksService.getTaskById(id)
+		handleSuccess(res, task)
+	} catch (error) {
+		handleError(res, error)
+	}
+}
+
 export const getTasksByStatusAndProject = async (req: Request, res: Response) => {
 	try {
 		const { taskStatusId, projectId } = req.body
@@ -39,7 +49,7 @@ export const createTask = async (req: Request | any, res: Response) => {
 		const { projectId } = req.params
 		const { description, endDate } = req.body
 		const userId = req.user.id
-		
+
 		const task = await tasksService.createTask({ projectId, description, endDate }, userId)
 		handleSuccess(res, task)
 	} catch (error) {

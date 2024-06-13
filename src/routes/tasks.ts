@@ -6,6 +6,7 @@ import {
 	createTask,
 	deleteTask,
 	updateTask,
+	getTaskById,
 } from '../controllers/tasks.controller'
 import { tokenAuthMiddleware } from '../middlewares/validateToken'
 import { createTaskValidator, updateTaskValidator } from '../validators/tasks'
@@ -13,7 +14,8 @@ import { createTaskValidator, updateTaskValidator } from '../validators/tasks'
 const router = Router()
 
 router.post('/:projectId', tokenAuthMiddleware, createTaskValidator, createTask)
-router.get('/:projectId', tokenAuthMiddleware, getTasksByProject)
+router.get('/project/:projectId', tokenAuthMiddleware, getTasksByProject)
+router.get('/:id', tokenAuthMiddleware, getTaskById)
 router.get('/project/status', tokenAuthMiddleware, getTasksByStatusAndProject)
 router.get('/collaborator/:collaboratorId', tokenAuthMiddleware, getTasksByCollaborator)
 router.put('/:id', tokenAuthMiddleware, updateTaskValidator, updateTask)
