@@ -59,8 +59,8 @@ export const createTask = async (req: Request | any, res: Response) => {
 
 export const addCollaboratorToTask = async (req: Request, res: Response) => {
 	try {
-		const { taskId, collaboratorId } = req.body
-		const task = await tasksService.addCollaboratorToTask(taskId, collaboratorId)
+		const { id, collaboratorId } = req.params
+		const task = await tasksService.addCollaboratorToTask(id, collaboratorId)
 		handleSuccess(res, task)
 	} catch (error) {
 		handleError(res, error)

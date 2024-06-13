@@ -16,7 +16,7 @@ import { collaboratorValidator } from '../validators/collaborators'
 const router = Router()
 
 router.post('/:projectId', tokenAuthMiddleware, createTaskValidator, createTask)
-router.post('/add-collaborator', tokenAuthMiddleware, collaboratorValidator, addCollaboratorToTask)
+router.post('/:id/collaborator/:collaboratorId', tokenAuthMiddleware, addCollaboratorToTask)
 router.get('/project/:projectId', tokenAuthMiddleware, getTasksByProject)
 router.get('/:id', tokenAuthMiddleware, getTaskById)
 router.get('/project/status', tokenAuthMiddleware, getTasksByStatusAndProject)
