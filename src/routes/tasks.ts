@@ -18,7 +18,7 @@ router.get('/project/:projectId', tokenAuthMiddleware, getTasksByProject)
 router.get('/:id', tokenAuthMiddleware, getTaskById)
 router.get('/project/status', tokenAuthMiddleware, getTasksByStatusAndProject)
 router.get('/collaborator/:collaboratorId', tokenAuthMiddleware, getTasksByCollaborator)
-router.put('/:id', tokenAuthMiddleware, updateTaskValidator, updateTask)
+router.put('/:id', tokenAuthMiddleware, updateTask)
 router.delete('/:id', tokenAuthMiddleware, deleteTask)
 
 export default router
