@@ -89,8 +89,8 @@ export class TasksService {
 							},
 						},
 					},
-					taskResources: true,
-					taskStatus: true,
+					taskResources: { select: { id: true, description: true, path: true } },
+					taskStatus: { select: { description: true } },
 				},
 			})
 			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
@@ -141,7 +141,7 @@ export class TasksService {
 									},
 								},
 							},
-							taskResources: true,
+							taskResources: { select: { id: true, description: true, path: true } },
 							taskStatus: { select: { description: true } },
 						},
 					},
