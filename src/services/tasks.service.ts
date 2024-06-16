@@ -238,6 +238,21 @@ export class TasksService {
 		}
 	}
 
+	deleteAllTasks = async (projectId: string) => {
+		try {
+			const tasks = await prisma.task.findMany({ where: { projectId, status: true } })
+			if (!tasks) throw new ErrorMessage('No hay tareas en el proyecto')
+
+			return prisma.task.updateMany({ where: { projectId }, data: { status: false } })
+		} catch (error) {
+			if (error instanceof ErrorMessage) {
+				throw new ErrorTM('Error al eliminar las tareas', error.message)
+			}
+
+			throw new ErrorTM('Error al eliminar las tareas', 'No se pudo eliminar las tareas')
+		}
+	}
+
 	getTasksByProject = async (projectId: string) => {
 		try {
 			const tasks = await prisma.task.findMany({

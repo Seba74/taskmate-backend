@@ -60,6 +60,16 @@ export const deleteTask = async (req: Request, res: Response) => {
 	}
 }
 
+export const deleteAllTasks = async (req: Request, res: Response) => {
+	try {
+		const { projectId } = req.params
+		const task = await tasksService.deleteAllTasks(projectId)
+		handleSuccess(res, task)
+	} catch (error) {
+		handleError(res, error)
+	}
+}
+
 export const updateTask = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params
