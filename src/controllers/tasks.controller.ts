@@ -1,8 +1,6 @@
 import { TasksService } from '../services/tasks.service'
 import { handleError, handleSuccess } from '../helpers/response.helper'
 import { Response, Request } from 'express'
-import { TaskStatus } from '../../dist/interfaces/taskStatus.dto'
-import { Collaborator } from '../../dist/interfaces/collaborator.dto'
 
 const tasksService = new TasksService()
 
