@@ -57,6 +57,7 @@ export class ProjectsService {
 				where: { id: projectId },
 				include: {
 					collaborators: {
+						where : { status: true },
 						select: {
 							id: true,
 							role: { select: { description: true } },
@@ -64,6 +65,7 @@ export class ProjectsService {
 						},
 					},
 					tasks: {
+						where : { status: true },
 						select: {
 							id: true,
 							description: true,
