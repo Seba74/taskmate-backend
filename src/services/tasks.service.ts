@@ -154,7 +154,66 @@ export class TasksService {
 			const task = await prisma.task.findUnique({ where: { id, status: true } })
 			if (!task) throw new ErrorMessage('Tarea no encontrada')
 
-			return prisma.task.update({ where: { id }, data: { ...data } })
+			let taskStatusId: string
+			if (data.taskStatus) {
+				const taskStatus = await prisma.taskStatus.findFirst({
+					where: { description: data.taskStatus },
+				})
+				if (!taskStatus) throw new ErrorMessage('No se encontró el estado de la tarea')
+				taskStatusId = taskStatus.id
+			}
+
+			if (data.collaborators) {
+				for (const collaboratorId of data.collaborators) {
+					const collaboratorExists = await prisma.collaborator.findFirst({
+						where: { projectId: task.projectId, id: collaboratorId },
+					})
+					if (!collaboratorExists) throw new ErrorMessage('El colaborador no existe')
+				}
+			}
+
+			const updatedTask = await prisma.task.update({
+				where: { id },
+				data: {
+					description: data.description,
+					endDate: data.endDate,
+					taskStatusId,
+				},
+			})
+
+			if (data.collaborators) {
+				await prisma.collaboratorsOnTasks.deleteMany({ where: { taskId: id } })
+				for (const collaboratorId of data.collaborators) {
+					const cot = await prisma.collaboratorsOnTasks.create({
+						data: { taskId: id, collaboratorId },
+					})
+				}
+			}
+
+			const taskWithAllData = await prisma.task.findUnique({
+				where: { id },
+				select: {
+					id: true,
+					endDate: true,
+					description: true,
+					collaboratorsOnTasks: {
+						include: {
+							collaborator: {
+								select: {
+									id: true,
+									user: {
+										select: { name: true, last_name: true, profile_picture: true },
+									},
+								},
+							},
+						},
+					},
+					taskResources: { select: { id: true, description: true, path: true } },
+					taskStatus: { select: { description: true } },
+				},
+			})
+
+			return taskWithAllData
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al actualizar la tarea', error.message)

@@ -30,5 +30,7 @@ export interface CreateTask {
 
 export interface UpdateTask {
 	description: string
-	end_date: Date
+	endDate: Date
+	taskStatus?: string
+	collaborators?: string[]
 }

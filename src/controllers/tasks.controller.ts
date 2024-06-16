@@ -63,8 +63,13 @@ export const deleteTask = async (req: Request, res: Response) => {
 export const updateTask = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params
-		const data = req.body
-		const task = await tasksService.updateTask(id, data)
+		const { description, endDate, taskStatus, collaborators } = req.body
+		const task = await tasksService.updateTask(id, {
+			description,
+			endDate,
+			taskStatus,
+			collaborators,
+		})
 		handleSuccess(res, task)
 	} catch (error) {
 		handleError(res, error)
