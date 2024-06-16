@@ -48,13 +48,24 @@ export class ProjectsService {
 
 	getProjectById = async (projectId: string, userId: string) => {
 		try {
-			const project = await prisma.project.findUnique({ where: { id: projectId } })
-			if (!project) throw new ErrorMessage('El proyecto no existe')
-
 			const collaborator = await prisma.collaborator.findFirst({
 				where: { projectId, userId },
 			})
 			if (!collaborator) throw new ErrorMessage('El usuario no es colaborador del proyecto')
+
+			const project = await prisma.project.findUnique({
+				where: { id: projectId },
+				include: {
+					collaborators: {
+						select: {
+							id: true,
+							role: { select: { description: true } },
+							user: { select: { name: true, last_name: true, profile_picture: true } },
+						},
+					},
+				},
+			 })
+			if (!project) throw new ErrorMessage('El proyecto no existe')
 
 			return project
 		} catch (error) {
