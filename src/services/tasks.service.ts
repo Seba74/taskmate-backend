@@ -37,7 +37,7 @@ export class TasksService {
 			if (data.collaborators) {
 				for (const collaboratorId of data.collaborators) {
 					const collaboratorExists = await prisma.collaborator.findFirst({
-						where: { projectId: project.id, userId: collaboratorId },
+						where: { projectId: project.id, id: collaboratorId },
 					})
 					if (!collaboratorExists) throw new ErrorMessage('El colaborador no existe')
 				}
