@@ -1,6 +1,8 @@
 import { TasksService } from '../services/tasks.service'
 import { handleError, handleSuccess } from '../helpers/response.helper'
 import { Response, Request } from 'express'
+import { TaskStatus } from '../../dist/interfaces/taskStatus.dto'
+import { Collaborator } from '../../dist/interfaces/collaborator.dto'
 
 const tasksService = new TasksService()
 
@@ -27,10 +29,13 @@ export const getTaskById = async (req: Request, res: Response) => {
 export const createTask = async (req: Request | any, res: Response) => {
 	try {
 		const { projectId } = req.params
-		const { description, endDate } = req.body
+		const { description, endDate, taskStatus, collaborators } = req.body
 		const userId = req.user.id
 
-		const task = await tasksService.createTask({ projectId, description, endDate }, userId)
+		const task = await tasksService.createTask(
+			{ projectId, description, endDate, taskStatus, collaborators },
+			userId,
+		)
 		handleSuccess(res, task)
 	} catch (error) {
 		handleError(res, error)

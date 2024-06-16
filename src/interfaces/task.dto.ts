@@ -24,6 +24,8 @@ export interface CreateTask {
 	projectId: string
 	description: string
 	endDate: Date
+	taskStatus?: string
+	collaborators?: string[]
 }
 
 export interface UpdateTask {

@@ -20,10 +20,28 @@ export class TasksService {
 			if (!collaborator)
 				throw new ErrorMessage('No tienes permisos para crear tareas en este proyecto')
 
-			const taskStatusId = (
-				await prisma.taskStatus.findFirst({ where: { description: TaskStatus.Pending } })
-			).id
+			let taskStatusId: string
+			if (data.taskStatus) {
+				const taskStatus = await prisma.taskStatus.findFirst({
+					where: { description: data.taskStatus },
+				})
+				if (!taskStatus) throw new ErrorMessage('No se encontró el estado de la tarea')
+				taskStatusId = taskStatus.id
+			} else {
+				taskStatusId = (
+					await prisma.taskStatus.findFirst({ where: { description: TaskStatus.Pending } })
+				).id
+			}
 			if (!taskStatusId) throw new ErrorMessage('No se encontró el estado de la tarea')
+
+			if (data.collaborators) {
+				for (const collaboratorId of data.collaborators) {
+					const collaboratorExists = await prisma.collaborator.findFirst({
+						where: { projectId: project.id, userId: collaboratorId },
+					})
+					if (!collaboratorExists) throw new ErrorMessage('El colaborador no existe')
+				}
+			}
 
 			const task = await prisma.task.create({
 				data: {
@@ -34,7 +52,38 @@ export class TasksService {
 				},
 			})
 
-			return task
+			if (data.collaborators) {
+				for (const collaboratorId of data.collaborators) {
+					const cot = await prisma.collaboratorsOnTasks.create({
+						data: { taskId: task.id, collaboratorId },
+					})
+				}
+			}
+
+			const taskWithAllData = await prisma.task.findUnique({
+				where: { id: task.id },
+				select: {
+					id: true,
+					endDate: true,
+					description: true,
+					collaboratorsOnTasks: {
+						include: {
+							collaborator: {
+								select: {
+									id: true,
+									user: {
+										select: { name: true, last_name: true, profile_picture: true },
+									},
+								},
+							},
+						},
+					},
+					taskResources: { select: { id: true, description: true, path: true } },
+					taskStatus: { select: { description: true } },
+				},
+			})
+
+			return taskWithAllData
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear la tarea', error.message)
