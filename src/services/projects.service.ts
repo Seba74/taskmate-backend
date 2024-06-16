@@ -63,8 +63,19 @@ export class ProjectsService {
 							user: { select: { name: true, last_name: true, profile_picture: true } },
 						},
 					},
+					tasks: {
+						select: {
+							id: true,
+							description: true,
+							endDate: true,
+							taskStatus: { select: { description: true } },
+							comments: { select: { id: true, collaboratorId: true, comment: true } },
+							taskResources: { select: { id: true, description: true, path: true } },
+							collaboratorsOnTasks: { select: { collaborator: { select: { id: true } } } },
+						},
+					},
 				},
-			 })
+			})
 			if (!project) throw new ErrorMessage('El proyecto no existe')
 
 			return project
