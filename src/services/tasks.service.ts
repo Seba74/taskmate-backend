@@ -11,15 +11,6 @@ export class TasksService {
 			const project = await prisma.project.findUnique({ where: { id: data.projectId } })
 			if (!project) throw new ErrorMessage('El proyecto no existe')
 
-			const roleAdmin = await prisma.role.findFirst({ where: { description: Role.Admin } })
-			if (!roleAdmin) throw new ErrorMessage('No se encontró el rol de administrador')
-
-			const collaborator = await prisma.collaborator.findFirst({
-				where: { projectId: data.projectId, userId, roleId: roleAdmin.id },
-			})
-			if (!collaborator)
-				throw new ErrorMessage('No tienes permisos para crear tareas en este proyecto')
-
 			let taskStatusId: string
 			if (data.taskStatus) {
 				const taskStatus = await prisma.taskStatus.findFirst({
