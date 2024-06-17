@@ -1,6 +1,7 @@
 import { TasksService } from '../services/tasks.service'
 import { handleError, handleSuccess } from '../helpers/response.helper'
 import { Response, Request } from 'express'
+import { UpdateTask } from 'src/interfaces/task.dto'
 
 const tasksService = new TasksService()
 
@@ -73,13 +74,18 @@ export const deleteAllTasks = async (req: Request, res: Response) => {
 export const updateTask = async (req: Request, res: Response) => {
 	try {
 		const { id } = req.params
-		const { description, endDate, taskStatus, collaborators } = req.body
-		const task = await tasksService.updateTask(id, {
+		const { description, endDate, taskStatus, collaborators, comments } = req.body
+
+		const data: UpdateTask = {
+			id,
 			description,
 			endDate,
 			taskStatus,
 			collaborators,
-		})
+			comments,
+		}
+
+		const task = await tasksService.updateTask(id, data)
 		handleSuccess(res, task)
 	} catch (error) {
 		handleError(res, error)

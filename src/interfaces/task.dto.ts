@@ -1,5 +1,5 @@
 import { CollaboratorsOnTasks } from './collaboratorOnTasks.dto'
-import { Comment } from './comment.dto'
+import { Comment, CreateComment } from './comment.dto'
 import { Project } from './project.dto'
 import { TaskResource } from './taskResource.dto'
 import { TaskStatus } from './taskStatus.dto'
@@ -29,8 +29,10 @@ export interface CreateTask {
 }
 
 export interface UpdateTask {
+	id: string
 	description: string
 	endDate: Date
 	taskStatus?: string
 	collaborators?: string[]
+	comments?: CreateComment[]
 }

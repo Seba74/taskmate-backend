@@ -118,7 +118,7 @@ model Comments {
   id             String       @id @default(cuid())
   task           Task         @relation(fields: [taskId], references: [id])
   collaborator   Collaborator @relation(fields: [collaboratorId], references: [id])
-  comment        String
+  description    String
   taskId         String
   collaboratorId String
   status         Boolean      @default(true)

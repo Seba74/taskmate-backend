@@ -65,6 +65,7 @@ export class TasksService {
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
+									comments: { select: { id: true, description: true, createdAt: true } },
 								},
 							},
 						},
@@ -129,6 +130,7 @@ export class TasksService {
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
+									comments: { select: { id: true, description: true, createdAt: true } },
 								},
 							},
 						},
@@ -172,7 +174,17 @@ export class TasksService {
 				}
 			}
 
-			const updatedTask = await prisma.task.update({
+			if (data.comments) {
+				for (const c of data.comments) {
+					const comment = await prisma.comments.create({
+						data: { taskId: id, description: c.description, collaboratorId: c.collaboratorId },
+					})
+
+					if (!comment) throw new ErrorMessage('No se pudo agregar el comentario')
+				}
+			}
+
+			await prisma.task.update({
 				where: { id },
 				data: {
 					description: data.description,
@@ -204,6 +216,7 @@ export class TasksService {
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
+									comments: { select: { id: true, description: true, createdAt: true } },
 								},
 							},
 						},
@@ -269,6 +282,7 @@ export class TasksService {
 									user: {
 										select: { name: true, last_name: true, profile_picture: true },
 									},
+									comments: { select: { id: true, description: true, createdAt: true } },
 								},
 							},
 						},

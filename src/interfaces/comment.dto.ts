@@ -5,7 +5,7 @@ export interface Comment {
 	id: string
 	task: Task
 	collaborator: Collaborator
-	comment: string
+	description: string
 	taskId: string
 	collaboratorId: string
 	status: boolean
@@ -14,7 +14,6 @@ export interface Comment {
 }
 
 export interface CreateComment {
-	comment: string
-	taskId: string
+	description: string
 	collaboratorId: string
 }

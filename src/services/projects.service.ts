@@ -57,7 +57,7 @@ export class ProjectsService {
 				where: { id: projectId },
 				include: {
 					collaborators: {
-						where : { status: true },
+						where: { status: true },
 						select: {
 							id: true,
 							role: { select: { description: true } },
@@ -65,16 +65,27 @@ export class ProjectsService {
 						},
 					},
 					tasks: {
-						where : { status: true },
+						where: { status: true },
 						select: {
 							id: true,
 							description: true,
 							endDate: true,
 							taskStatus: { select: { description: true } },
-							comments: { select: { id: true, collaboratorId: true, comment: true } },
 							taskResources: { select: { id: true, description: true, path: true } },
-							collaboratorsOnTasks: { select: { collaborator: { select: { id: true, user: {
-								select: { name: true, last_name: true, profile_picture: true } } } } } }
+							collaboratorsOnTasks: {
+								select: {
+									collaborator: {
+										select: {
+											id: true,
+											user: { select: { name: true, last_name: true, profile_picture: true } },
+											comments: {
+												where: { status: true, taskId: { equals: '$task.id' } },
+												select: { id: true, description: true, createdAt: true },
+											},
+										},
+									},
+								},
+							},
 						},
 					},
 				},
@@ -107,7 +118,7 @@ export class ProjectsService {
 				},
 			})
 
-			const collaborator = await prisma.collaborator.create({
+			await prisma.collaborator.create({
 				data: {
 					roleId: (await prisma.role.findFirst({ where: { description: Role.Admin } })).id,
 					userId: user.id,
@@ -115,7 +126,24 @@ export class ProjectsService {
 				},
 			})
 
-			return { project, collaborator }
+			const projectData = await prisma.project.findUnique({
+				where: { id: project.id },
+				select: {
+					id: true,
+					title: true,
+					description: true,
+					project_picture: true,
+					createdAt: true,
+					collaborators: {
+						select: {
+							role: { select: { description: true } },
+							user: { select: { name: true, last_name: true, profile_picture: true } },
+						},
+					},
+				},
+			})
+
+			return projectData
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al crear el proyecto', error.message)
