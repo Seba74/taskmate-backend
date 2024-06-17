@@ -14,3 +14,8 @@ export enum ResourceType {
 	Image = 'image',
 	Document = 'document',
 }
+
+export enum DefaultImage {
+	Project = 'default_picture.webp',
+	User = 'default_user.webp',
+}

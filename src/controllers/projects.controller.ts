@@ -3,6 +3,7 @@ import { handleError, handleSuccess } from '../helpers/response.helper'
 import { ProjectsService } from '../services/projects.service'
 import { CreateProject } from '../interfaces/project.dto'
 import { removeImage, convertToWebp } from '../libs/multer'
+import { DefaultImage } from '../helpers/enums'
 
 const projectsService = new ProjectsService()
 
@@ -43,7 +44,7 @@ export const createProject = async (req: any, res: Response) => {
 
 		let imageName = ''
 		if (!req.file) {
-			imageName = 'default_picture.webp'
+			imageName = DefaultImage.Project
 		} else {
 			imageName = await convertToWebp(req.file.buffer)
 		}
