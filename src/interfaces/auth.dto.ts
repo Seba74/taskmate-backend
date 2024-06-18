@@ -8,6 +8,7 @@ export interface AuthRegister {
   last_name: string;
   email: string;
   password: string;
+  profile_picture: string;
 }
 
 export interface Payload {

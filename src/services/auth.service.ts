@@ -2,7 +2,7 @@ import { generateAccessToken } from '../libs/jwt'
 import { Auth, AuthRegister, Payload } from '../interfaces/auth.dto'
 import * as bcrypt from 'bcryptjs'
 import { PrismaClient } from '@prisma/client'
-import { ErrorMessage, ErrorTM } from '../helpers/error.helper';
+import { ErrorMessage, ErrorTM } from '../helpers/error.helper'
 
 const prisma = new PrismaClient()
 
@@ -53,12 +53,14 @@ export class AuthService {
 
 			if (user) throw new ErrorMessage('El correo ya está registrado')
 			const password = await bcrypt.hash(authData.password, 10)
+			if (!authData.profile_picture) authData.profile_picture = ''
 
 			const newUser = await prisma.user.create({
 				data: {
 					name: authData.name,
 					last_name: authData.last_name,
 					email: authData.email,
+					profile_picture: authData.profile_picture,
 					password,
 				},
 			})
