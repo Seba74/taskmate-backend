@@ -63,6 +63,11 @@ export class ProjectsService {
 							id: true,
 							role: { select: { description: true } },
 							user: { select: { name: true, last_name: true, profile_picture: true } },
+							collaboratorsOnTasks: {
+								select: {
+									taskId: true,
+								},
+							},
 						},
 					},
 					tasks: {
