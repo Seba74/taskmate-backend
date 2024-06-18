@@ -18,8 +18,8 @@ export const login = async (req: Request, res: Response) => {
 
 export const register = async (req: Request, res: Response) => {
 	try {
-		const { name, last_name, email, password } = req.body
-		const token = await authService.register({ name, last_name, email, password })
+		const { name, last_name, email, password, profile_picture } = req.body
+		const token = await authService.register({ name, last_name, email, password, profile_picture})
 		handleSuccess(res, token)
 	} catch (error) {
 		handleError(res, error)

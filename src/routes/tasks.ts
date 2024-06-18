@@ -10,7 +10,6 @@ import {
 } from '../controllers/tasks.controller'
 import { tokenAuthMiddleware } from '../middlewares/validateToken'
 import { createTaskValidator } from '../validators/tasks'
-import { collaboratorValidator } from '../validators/collaborators'
 
 const router = Router()
 
