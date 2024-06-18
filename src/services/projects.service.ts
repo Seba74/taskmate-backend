@@ -30,8 +30,9 @@ export class ProjectsService {
 				include: {
 					collaborators: {
 						select: {
+							id: true,
 							role: { select: { description: true } },
-							user: { select: { name: true, last_name: true, profile_picture: true } },
+							user: { select: { id: true, name: true, last_name: true, profile_picture: true } },
 						},
 					},
 				},
