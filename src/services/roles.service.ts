@@ -8,6 +8,8 @@ export class RolesService {
 		try {
 			const roles = await prisma.role.findMany({ where: { status: true } })
 			if (roles.length === 0) throw new ErrorMessage('No hay roles registrados')
+
+			return roles
 		} catch (error) {
 			if (error instanceof ErrorMessage) {
 				throw new ErrorTM('Error al obtener los roles', error.message)
