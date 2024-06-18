@@ -142,6 +142,7 @@ export class ProjectsService {
 					createdAt: true,
 					collaborators: {
 						select: {
+							id: true,
 							role: { select: { description: true } },
 							user: { select: { name: true, last_name: true, profile_picture: true } },
 						},
